@@ -59,17 +59,4 @@ fun MySmovTheme(
         typography = Typography,
         content = content
     )
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.surface.toArgb()
-
-            val insetsController = WindowCompat.getInsetsController(window, view)
-            insetsController.isAppearanceLightStatusBars = !darkTheme
-            // Optional: also set nav bar
-            insetsController.isAppearanceLightNavigationBars = !darkTheme
-        }
-    }
-
 }
