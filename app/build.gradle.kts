@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.android)
-    alias(libs.plugins.devtool.ksp)
 }
 
 android {
@@ -52,10 +50,9 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     // Retrofit
     implementation(libs.retrofit)

@@ -1,6 +1,8 @@
 package dev.me.mysmov.feature.home
 
 import dev.me.mysmov.core.Action
+import dev.me.mysmov.core.Effect
+import dev.me.mysmov.core.Event
 import dev.me.mysmov.core.ViewState
 
 sealed class HomeAction : Action {
@@ -12,3 +14,11 @@ sealed class HomeAction : Action {
 data class HomeViewState(
     val title : String = "Home"
 ) : ViewState
+
+sealed class HomeEvent : Event {
+    object ShowLoading : HomeEvent()
+}
+
+sealed class HomeEffect : Effect {
+    data class ShowDetailMovie(val id : Int) : HomeEffect()
+}

@@ -1,10 +1,10 @@
 package dev.me.mysmov.feature.home
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.me.mysmov.core.BaseViewModel
 
-@HiltViewModel
-class HomeViewModel : BaseViewModel<HomeAction, HomeViewState>(HomeViewState()) {
+class HomeViewModel : BaseViewModel<HomeAction, HomeEvent, HomeEffect, HomeViewState>() {
+    override fun initialState(): HomeViewState = HomeViewState()
+
     override fun onAction(action: HomeAction) {
         when(action) {
             HomeAction.InitPage -> requestMovieList()
@@ -13,8 +13,11 @@ class HomeViewModel : BaseViewModel<HomeAction, HomeViewState>(HomeViewState()) 
         }
     }
 
-    override fun trackViewScreen() {
-        //TODO("send analytic tracker")
+    override fun reduce(
+        event: HomeEvent,
+        oldState: HomeViewState
+    ): HomeViewState {
+        TODO("Not yet implemented")
     }
 
     private fun requestMovieList() {
