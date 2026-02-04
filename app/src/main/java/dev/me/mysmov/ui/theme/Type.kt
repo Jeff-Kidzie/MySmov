@@ -21,6 +21,13 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    bodyMedium = TextStyle(
+        fontFamily = jakartaRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.25.sp
+    ),
     titleLarge = TextStyle(
         fontFamily = jakartaBold,
         fontWeight = FontWeight.Normal,
