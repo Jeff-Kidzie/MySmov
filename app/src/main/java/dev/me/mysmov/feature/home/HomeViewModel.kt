@@ -1,6 +1,6 @@
 package dev.me.mysmov.feature.home
 
-import dev.me.mysmov.core.BaseViewModel
+import dev.me.mysmov.base.BaseViewModel
 
 class HomeViewModel : BaseViewModel<HomeAction, HomeEvent, HomeEffect, HomeViewState>() {
     override fun initialState(): HomeViewState = HomeViewState()

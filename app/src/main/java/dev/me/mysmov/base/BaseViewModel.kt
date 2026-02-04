@@ -1,4 +1,4 @@
-package dev.me.mysmov.core
+package dev.me.mysmov.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

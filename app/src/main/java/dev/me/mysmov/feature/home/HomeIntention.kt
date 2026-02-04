@@ -1,9 +1,9 @@
 package dev.me.mysmov.feature.home
 
-import dev.me.mysmov.core.Action
-import dev.me.mysmov.core.Effect
-import dev.me.mysmov.core.Event
-import dev.me.mysmov.core.ViewState
+import dev.me.mysmov.base.Action
+import dev.me.mysmov.base.Effect
+import dev.me.mysmov.base.Event
+import dev.me.mysmov.base.ViewState
 
 sealed class HomeAction : Action {
     object InitPage : HomeAction()

@@ -1,4 +1,4 @@
-package dev.me.mysmov.core
+package dev.me.mysmov.base
 
 interface BaseUseCase<param : Param, result : UseCaseResult> {
     fun execute(param: param): result
