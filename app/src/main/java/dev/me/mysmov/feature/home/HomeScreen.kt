@@ -44,11 +44,22 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
+    onNavigateToDetail: (Int) -> Unit = {}
+) {
     val state by viewModel.viewState.collectAsState()
+    val onWatchClick = { id: Int ->
+        viewModel.onAction(HomeAction.OnClickMovie(id))
+    }
 
     LaunchedEffect(Unit) {
         viewModel.onAction(HomeAction.InitPage)
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is HomeEffect.ShowDetailMovie -> onNavigateToDetail(effect.id)
+            }
+        }
     }
 
     val searchQuery = remember { mutableStateOf("") }
@@ -85,7 +96,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 placeholder = { Text("Movies, actors, or genres...") }
             ) {}
         }
-        item { SectionNowPlaying(state.nowPlayingMovies) }
+        item { SectionNowPlaying(state.nowPlayingMovies, onWatchClick) }
         item { SectionHeader(title = "Popular", actionText = "") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -136,7 +147,6 @@ private fun Header() {
         Spacer(Modifier.width(10.dp))
         Text("Discover", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold))
         Spacer(Modifier.weight(1f))
-//        Icon(imageVector = Icons.Default.Bell, contentDescription = null)
         Spacer(Modifier.width(14.dp))
         Box(
             modifier = Modifier
@@ -168,7 +178,7 @@ private fun SectionHeader(title: String, actionText: String) {
 }
 
 @Composable
-private fun SectionNowPlaying(cards: List<Movie>) {
+private fun SectionNowPlaying(cards: List<Movie>, onWatchNow : (Int) -> Unit = {}) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(title = "Now Playing", actionText = "View All")
         LazyRow(
@@ -178,9 +188,11 @@ private fun SectionNowPlaying(cards: List<Movie>) {
             items(cards) { card ->
                 MovieBannerCard(
                     modifier = Modifier.width(320.dp),
+                    id = card.id,
                     imageUrl = card.backdropPath,
                     title = card.title,
-                    rating = card.rating
+                    rating = card.rating,
+                    onWatchNowClick = onWatchNow
                 )
             }
         }

@@ -19,14 +19,17 @@ class HomeViewModel(
     override fun initialState(): HomeViewState = HomeViewState()
 
     override fun handleOnAction(action: HomeAction) {
-        when (action) {
-            HomeAction.InitPage, HomeAction.RefreshPage -> viewModelScope.launch {
-                requestMovieList()
-                requestNowPlayingMovieList()
-            }
+        viewModelScope.launch {
+            when (action) {
+                HomeAction.InitPage, HomeAction.RefreshPage -> {
+                    requestMovieList()
+                    requestNowPlayingMovieList()
+                }
 
-            is HomeAction.OnClickMovie -> requestMovieDetail(action.id)
+                is HomeAction.OnClickMovie -> sendEffect(HomeEffect.ShowDetailMovie(action.id))
+            }
         }
+
     }
 
     override fun reduce(
@@ -46,7 +49,7 @@ class HomeViewModel(
         event: HomeEvent
     ): List<Movie> {
         return when (event) {
-            is HomeEvent.ShowNowPlayingMovies-> event.movies
+            is HomeEvent.ShowNowPlayingMovies -> event.movies
             else -> oldState.nowPlayingMovies
         }
     }
@@ -91,7 +94,11 @@ class HomeViewModel(
         sendEvent(HomeEvent.DismissLoading)
         when (result) {
             is NowPlayingMovieUseCaseResult.Error -> sendEvent(HomeEvent.ShowError(result.message))
-            is NowPlayingMovieUseCaseResult.Success -> sendEvent(HomeEvent.ShowNowPlayingMovies(result.movies))
+            is NowPlayingMovieUseCaseResult.Success -> sendEvent(
+                HomeEvent.ShowNowPlayingMovies(
+                    result.movies
+                )
+            )
         }
     }
 

@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dev.me.mysmov.feature.detail.DetailScreen
 import dev.me.mysmov.feature.home.HomeScreen
 import dev.me.mysmov.feature.profile.ProfileScreen
 import dev.me.mysmov.feature.search.SearchScreen
@@ -38,14 +39,13 @@ fun HomeContainer() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomNavItem.Home.route) {
-                HomeScreen()
+                HomeScreen(
+                    onNavigateToDetail = { id -> navController.navigate("detail/$id") }
+                )
             }
-            composable(BottomNavItem.Search.route) {
-                SearchScreen()
-            }
-            composable(BottomNavItem.Profile.route) {
-                ProfileScreen()
-            }
+            composable(BottomNavItem.Search.route) { SearchScreen() }
+            composable(BottomNavItem.Profile.route) { ProfileScreen() }
+            composable("detail/{movieId}") { DetailScreen(onBackClick = { navController.popBackStack() }) }
         }
     }
 }

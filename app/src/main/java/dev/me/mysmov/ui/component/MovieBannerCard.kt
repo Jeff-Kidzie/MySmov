@@ -34,10 +34,11 @@ import coil3.compose.AsyncImage
 @Composable
 fun MovieBannerCard(
     modifier: Modifier = Modifier,
+    id: Int,
     imageUrl: String,
     title: String,
     rating: Double,
-    onWatchNowClick: () -> Unit = {},
+    onWatchNowClick: (Int) -> Unit = {},
     onAddClick: () -> Unit = {},
 ) {
     Box(
@@ -93,7 +94,7 @@ fun MovieBannerCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AppButton(
-                    onClickButton = onWatchNowClick,
+                    onClickButton = { onWatchNowClick(id) },
                     text = "Watch Now",
                     modifier = Modifier.fillMaxWidth(0.7f),
                     type = ButtonType.Primary
