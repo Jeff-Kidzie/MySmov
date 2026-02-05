@@ -1,4 +1,4 @@
-package dev.me.mysmov.base
+package dev.me.mysmov.core.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel<A : Action, EV : Event, EF : Effect, VS : ViewState> : ViewModel() {
 
     protected abstract fun initialState() : VS
-    protected abstract fun onAction(action: A)
-    protected abstract fun reduce(event : EV, oldState : VS) : VS
+    protected abstract fun handleOnAction(action: A)
+    protected abstract fun reduce(oldState : VS, event : EV) : VS
 
     // view state flow
     private val _viewState = MutableStateFlow(initialState())
@@ -22,8 +22,12 @@ abstract class BaseViewModel<A : Action, EV : Event, EF : Effect, VS : ViewState
     private val _effect = MutableSharedFlow<EF>()
     val effect : SharedFlow<EF> = _effect
 
+    fun onAction(action: A) {
+        handleOnAction(action)
+    }
+
     protected fun sendEvent(ev : EV) {
-        _viewState.update { old -> reduce(ev, old)}
+        _viewState.update { old -> reduce(old, ev)}
     }
 
     protected fun sendEffect(ef : EF) {

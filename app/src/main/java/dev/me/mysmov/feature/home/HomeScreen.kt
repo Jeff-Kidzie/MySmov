@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,11 @@ private data class MovieCard(val title: String, val subtitle: String, val rating
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.viewState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onAction(HomeAction.InitPage)
+    }
+
     val searchQuery = remember { mutableStateOf("") }
 
     val nowPlaying = remember {
