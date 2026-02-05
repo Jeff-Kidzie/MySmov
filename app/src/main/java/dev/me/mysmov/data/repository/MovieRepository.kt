@@ -5,4 +5,5 @@ import dev.me.mysmov.data.model.Movie
 
 interface MovieRepository {
     suspend fun getDiscoverMovies() : CallResult<List<Movie>>
+    suspend fun getNowPlayingMovies() : CallResult<List<Movie>>
 }

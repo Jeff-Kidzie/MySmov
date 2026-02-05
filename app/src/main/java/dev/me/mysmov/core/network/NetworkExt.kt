@@ -24,3 +24,12 @@ suspend fun <T> callApi(
         CallResult.Exception(e)
     }
 }
+
+fun <T,R> CallResult<T>.transform(transform : (T) -> R) : CallResult<R> {
+    return when(this) {
+        is CallResult.Success -> CallResult.Success(transform(this.data))
+        is CallResult.Error -> CallResult.Error(this.errorCode, this.message)
+        is CallResult.Exception -> CallResult.Exception(this.exception)
+    }
+
+}

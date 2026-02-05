@@ -8,4 +8,8 @@ class LocalMovieDataSource : MovieRepository {
     override suspend fun getDiscoverMovies(): CallResult<List<Movie>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getNowPlayingMovies(): CallResult<List<Movie>> {
+        TODO("Not yet implemented")
+    }
 }

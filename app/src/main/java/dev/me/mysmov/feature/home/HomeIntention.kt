@@ -13,16 +13,17 @@ sealed class HomeAction : Action {
 }
 
 data class HomeViewState(
-    val title : String = "Home",
     val isLoading : Boolean = false,
     val movies : List<Movie> = emptyList(),
-    val errorMessage : String = ""
+    val nowPlayingMovies : List<Movie> = emptyList(),
+    val errorMessage : String = "",
 ) : ViewState
 
 sealed class HomeEvent : Event {
     object ShowLoading : HomeEvent()
     object DismissLoading : HomeEvent()
     data class ShowMovies(val movies : List<Movie>) : HomeEvent()
+    data class ShowNowPlayingMovies(val movies : List<Movie>) : HomeEvent()
     data class ShowError(val message : String) : HomeEvent()
 }
 
