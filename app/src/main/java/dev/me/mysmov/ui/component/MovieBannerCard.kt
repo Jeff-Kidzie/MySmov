@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -38,7 +39,7 @@ fun MovieBannerCard(
     rating: Double,
     onWatchNowClick: () -> Unit = {},
     onAddClick: () -> Unit = {},
-    ) {
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -60,53 +61,41 @@ fun MovieBannerCard(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .background(Color(0xCC000000), shape = RoundedCornerShape(12.dp))
+                    .padding(all = 4.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .background(Color(0xFFEE5253), shape = RoundedCornerShape(12.dp))
-                        .padding(horizontal = 10.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        "TRENDING",
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(Color(0xCC000000), shape = RoundedCornerShape(12.dp))
-                        .padding(horizontal = 10.dp, vertical = 6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color(0xFFFFD166),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        String.format("%.1f", rating),
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Color(0xFFFFD166),
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    String.format("%.1f", rating),
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelMedium
+                )
             }
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = Color.White
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 AppButton(
                     onClickButton = onWatchNowClick,
                     text = "Watch Now",
-                    modifier = Modifier,
+                    modifier = Modifier.fillMaxWidth(0.7f),
                     type = ButtonType.Primary
                 )
                 Button(

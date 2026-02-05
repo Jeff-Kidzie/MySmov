@@ -11,7 +11,7 @@ data class Movie(
     @SerializedName("vote_average")
     val rating: Double = 0.0,
     @SerializedName("backdrop_path")
-    val backdropPath: String? = null,
+    val backdropPath: String = "",
     @SerializedName("release_date")
-    val releaseDate: String? = null,
+    val releaseDate: String = "",
 )

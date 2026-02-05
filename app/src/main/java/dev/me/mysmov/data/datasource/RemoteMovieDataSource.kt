@@ -27,7 +27,7 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
                         AppConstant.BASE_URL_IMAGE + movie.posterPath
                     },
                     rating = movie.rating,
-                    backdropPath = movie.backdropPath,
+                    backdropPath =  AppConstant.BASE_URL_IMAGE + movie.backdropPath,
                     releaseDate = movie.releaseDate
                 )
             }

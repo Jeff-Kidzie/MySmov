@@ -33,7 +33,7 @@ fun AppButton(
         is ButtonType.Secondary -> BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
     }
     Button(
-        modifier = modifier.padding(10.dp),
+        modifier = modifier,
         onClick = onClickButton,
         border = borderStroke,
         shape = RoundedCornerShape(8.dp),

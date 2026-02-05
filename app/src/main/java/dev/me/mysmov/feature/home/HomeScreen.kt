@@ -178,7 +178,7 @@ private fun SectionNowPlaying(cards: List<Movie>) {
             items(cards) { card ->
                 MovieBannerCard(
                     modifier = Modifier.width(320.dp),
-                    imageUrl = card.posterPath,
+                    imageUrl = card.backdropPath,
                     title = card.title,
                     rating = card.rating
                 )
