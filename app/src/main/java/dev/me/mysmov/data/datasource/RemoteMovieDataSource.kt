@@ -5,6 +5,7 @@ import dev.me.mysmov.core.network.CallResult
 import dev.me.mysmov.core.network.callApi
 import dev.me.mysmov.core.network.transform
 import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.repository.MovieRepository
 import dev.me.mysmov.service.ApiService
 
@@ -31,6 +32,15 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
                     releaseDate = movie.releaseDate
                 )
             }
+        }
+    }
+
+    override suspend fun getMovieDetail(id: Int): CallResult<MovieDetail> {
+        return callApi { apiService.getMovieDetail(id) }.transform { movieDetail ->
+            movieDetail.copy(
+                posterPath = AppConstant.BASE_URL_IMAGE + movieDetail.posterPath,
+                backdropPath = AppConstant.BASE_URL_IMAGE + movieDetail.backdropPath
+            )
         }
     }
 }

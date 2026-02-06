@@ -17,7 +17,7 @@ sealed class DetailMovieEffect : Effect {
 }
 
 sealed class DetailMovieAction : Action {
-    object InitPage : DetailMovieAction()
+    data class OnRequestDetail(val id : Int) : DetailMovieAction()
     data class OnClickWatchNow(val id : Int) : DetailMovieAction()
 }
 
