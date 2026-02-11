@@ -31,6 +31,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +46,24 @@ import coil3.compose.AsyncImage
 import dev.me.mysmov.ui.component.AppButton
 import dev.me.mysmov.ui.component.ButtonType
 import dev.me.mysmov.ui.component.CastItem
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailScreen(onBackClick : () -> Unit = {}) {
+fun DetailScreen(
+    movieDetailViewModel: MovieDetailViewModel = koinViewModel(),
+    onBackClick : () -> Unit = {}) {
+
+    val movieDetailState = movieDetailViewModel.viewState.collectAsState()
+    LaunchedEffect(Unit) {
+        movieDetailViewModel.effect.collect { effect ->
+            when(effect) {
+                DetailMovieEffect.NavigateToWatchList -> TODO()
+                is DetailMovieEffect.ShowToast -> TODO()
+            }
+        }
+    }
+
+
     val castMembers = listOf(
         CastUiModel(
             "Marcus Thorne",

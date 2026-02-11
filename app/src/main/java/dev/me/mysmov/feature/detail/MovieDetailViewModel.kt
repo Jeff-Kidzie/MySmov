@@ -20,19 +20,25 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
     }
 
     private suspend fun addToWatchNow(id: Int) {
-        TODO("Not yet implemented")
+        sendEffect(DetailMovieEffect.ShowToast("Added to watchlist"))
     }
 
     private suspend fun requestMovieDetail(id: Int) {
+        sendEvent(DetailMovieEvent.ShowLoading)
         val result = getDetailMovieUseCase.execute(GetMovieDetailUseCaseParam(id))
+        sendEvent(DetailMovieEvent.DismissLoading)
     }
-
 
     override fun reduce(
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): DetailMovieViewState {
-        TODO("Not yet implemented")
+        return DetailMovieViewState(
+            imgUrl = "",
+            title = "",
+            overview = "",
+            rating = 0.0,
+        )
     }
 
 }

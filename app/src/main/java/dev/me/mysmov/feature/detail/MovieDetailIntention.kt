@@ -9,11 +9,15 @@ import dev.me.mysmov.data.model.Movie
 
 
 data class DetailMovieViewState(
-    val imgUrl : String = ""
+    val imgUrl : String = "",
+    val overview : String = "",
+    val title : String = "",
+    val rating : Double = 0.0,
 ) : ViewState
 
 sealed class DetailMovieEffect : Effect {
     data class ShowToast(val message : String) : DetailMovieEffect()
+    object NavigateToWatchList : DetailMovieEffect()
 }
 
 sealed class DetailMovieAction : Action {
