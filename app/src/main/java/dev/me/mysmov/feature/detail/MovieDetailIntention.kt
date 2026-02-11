@@ -6,13 +6,19 @@ import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
 import dev.me.mysmov.data.model.Cast
 import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MovieDetail
 
 
 data class DetailMovieViewState(
     val imgUrl : String = "",
+    val posterPath : String = "",
     val overview : String = "",
     val title : String = "",
     val rating : Double = 0.0,
+    val yearRelease : String = "",
+    val duration : String = "",
+    val listGenres : List<String> = emptyList(),
+    val countReviews : Int = 0,
 ) : ViewState
 
 sealed class DetailMovieEffect : Effect {
@@ -26,7 +32,7 @@ sealed class DetailMovieAction : Action {
 }
 
 sealed class DetailMovieEvent : Event{
-    data class ShowMovieDetail(val id : Int) : DetailMovieEvent()
+    data class ShowMovieDetail(val movieDetail : MovieDetail) : DetailMovieEvent()
     object ShowLoading : DetailMovieEvent()
     object DismissLoading : DetailMovieEvent()
     data class ShowError(val message : String) : DetailMovieEvent()

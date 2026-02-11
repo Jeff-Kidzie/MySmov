@@ -49,14 +49,17 @@ import dev.me.mysmov.ui.component.CastItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailScreen(
+fun MovieDetailScreen(
     movieDetailViewModel: MovieDetailViewModel = koinViewModel(),
-    onBackClick : () -> Unit = {}) {
+    id: Int,
+    onBackClick: () -> Unit = {}
+) {
 
-    val movieDetailState = movieDetailViewModel.viewState.collectAsState()
+    val movieDetailState = movieDetailViewModel.viewState.collectAsState().value
     LaunchedEffect(Unit) {
+        movieDetailViewModel.onAction(DetailMovieAction.OnRequestDetail(id))
         movieDetailViewModel.effect.collect { effect ->
-            when(effect) {
+            when (effect) {
                 DetailMovieEffect.NavigateToWatchList -> TODO()
                 is DetailMovieEffect.ShowToast -> TODO()
             }
@@ -101,19 +104,19 @@ fun DetailScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        HeaderSection(onBackClick)
-        ContentSection(castMembers = castMembers, trailers = trailers)
+        HeaderSection(movieDetailState, onBackClick)
+        ContentSection(movieDetailState = movieDetailState,castMembers = castMembers, trailers = trailers)
     }
 }
 
 @Composable
-private fun HeaderSection(onBackClick: () -> Unit) {
+private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(420.dp),
-            model = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+            model = movieDetailState.imgUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
@@ -137,7 +140,7 @@ private fun HeaderSection(onBackClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = onBackClick , modifier = Modifier
+                onClick = onBackClick, modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .background(Color(0x33000000))
@@ -176,20 +179,20 @@ private fun HeaderSection(onBackClick: () -> Unit) {
                     .width(110.dp)
                     .height(160.dp)
                     .clip(RoundedCornerShape(14.dp)),
-                model = "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=500&q=80",
+                model = movieDetailState.posterPath,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
-                    text = "Stellar Echoes",
+                    text = movieDetailState.title,
                     style = MaterialTheme.typography.headlineSmall.copy(
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 )
                 Text(
-                    text = "2024  •  2h24m  •  Sci-Fi, Action",
+                    text = "${movieDetailState.yearRelease}  •  ${movieDetailState.duration}  \n ${movieDetailState.listGenres.joinToString()}",
                     style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.85f))
                 )
                 Row(
@@ -202,14 +205,14 @@ private fun HeaderSection(onBackClick: () -> Unit) {
                         tint = Color(0xFFFFD166)
                     )
                     Text(
-                        text = "8.9",
+                        text = "%.1f".format(movieDetailState.rating),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color.White,
                             fontWeight = FontWeight.SemiBold
                         )
                     )
                     Text(
-                        text = "(24.5k reviews)",
+                        text = "(${movieDetailState.countReviews} reviews)",
                         style = MaterialTheme.typography.labelMedium.copy(
                             color = Color.White.copy(
                                 alpha = 0.75f
@@ -223,7 +226,7 @@ private fun HeaderSection(onBackClick: () -> Unit) {
 }
 
 @Composable
-private fun ContentSection(castMembers: List<CastUiModel>, trailers: List<TrailerUiModel>) {
+private fun ContentSection(movieDetailState: DetailMovieViewState,castMembers: List<CastUiModel>, trailers: List<TrailerUiModel>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -254,7 +257,7 @@ private fun ContentSection(castMembers: List<CastUiModel>, trailers: List<Traile
                 )
             )
             Text(
-                text = "In a future where the last remnants of humanity live aboard drifting orbital stations, a rogue transmission from a long-dead colony planet sparks a desperate mission. Captain Elena Vance must lead a skeleton crew back to Earth to uncover the truth behind the silence.",
+                text = movieDetailState.overview,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(
                         alpha = 0.85f
