@@ -66,26 +66,6 @@ fun MovieDetailScreen(
         }
     }
 
-
-    val castMembers = listOf(
-        CastUiModel(
-            "Marcus Thorne",
-            "Elena Vance",
-            "https://randomuser.me/api/portraits/men/64.jpg"
-        ),
-        CastUiModel(
-            "Sia Jenkins",
-            "Chief Kael",
-            "https://randomuser.me/api/portraits/women/65.jpg"
-        ),
-        CastUiModel(
-            "David Lowery",
-            "The Admiral",
-            "https://randomuser.me/api/portraits/men/66.jpg"
-        ),
-        CastUiModel("Liam West", "Pilot Jax", "https://randomuser.me/api/portraits/men/67.jpg")
-    )
-
     val trailers = listOf(
         TrailerUiModel(
             title = "Official Teaser: Journey to the Edge",
@@ -105,7 +85,7 @@ fun MovieDetailScreen(
             .verticalScroll(rememberScrollState())
     ) {
         HeaderSection(movieDetailState, onBackClick)
-        ContentSection(movieDetailState = movieDetailState,castMembers = castMembers, trailers = trailers)
+        ContentSection(movieDetailState = movieDetailState, trailers = trailers)
     }
 }
 
@@ -226,7 +206,7 @@ private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: (
 }
 
 @Composable
-private fun ContentSection(movieDetailState: DetailMovieViewState,castMembers: List<CastUiModel>, trailers: List<TrailerUiModel>) {
+private fun ContentSection(movieDetailState: DetailMovieViewState, trailers: List<TrailerUiModel>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -285,11 +265,12 @@ private fun ContentSection(movieDetailState: DetailMovieViewState,castMembers: L
                 )
             }
             LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                val castMembers = movieDetailState.listCast
                 items(castMembers) { cast ->
                     CastItem(
                         name = cast.name,
                         role = cast.role,
-                        imageUrl = cast.imageUrl
+                        imageUrl = cast.imgUrl
                     )
                 }
             }

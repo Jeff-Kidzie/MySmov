@@ -6,6 +6,7 @@ import dev.me.mysmov.core.network.callApi
 import dev.me.mysmov.core.network.transform
 import dev.me.mysmov.data.model.Movie
 import dev.me.mysmov.data.model.MovieDetail
+import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.repository.MovieRepository
 import dev.me.mysmov.service.ApiService
 
@@ -41,6 +42,16 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
                 posterPath = AppConstant.BASE_URL_IMAGE + movieDetail.posterPath,
                 backdropPath = AppConstant.BASE_URL_IMAGE + movieDetail.backdropPath
             )
+        }
+    }
+
+    override suspend fun getCastByMovie(movieId: Int): CallResult<List<CastDto>> {
+        return callApi { apiService.getMovieCredits(movieId) }.transform { dataResponse ->
+            dataResponse.results.map { castDto ->
+                castDto.copy(
+                    profilePath = AppConstant.BASE_URL_IMAGE + castDto.profilePath
+                )
+            }
         }
     }
 }

@@ -2,21 +2,46 @@ package dev.me.mysmov.feature.detail
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
+import dev.me.mysmov.data.model.CastUi
+import dev.me.mysmov.domain.GetCastUseCase
+import dev.me.mysmov.domain.GetCastUseCaseParam
+import dev.me.mysmov.domain.GetCastUseCaseResult
 import dev.me.mysmov.domain.GetMovieDetailUseCase
 import dev.me.mysmov.domain.GetMovieDetailUseCaseParam
 import dev.me.mysmov.domain.GetMovieDetailUseCaseResult
 import kotlinx.coroutines.launch
 
-class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
+class MovieDetailViewModel(
+    private val getDetailMovieUseCase: GetMovieDetailUseCase,
+    private val getCastUseCase: GetCastUseCase
+) :
     BaseViewModel<DetailMovieAction, DetailMovieEvent, DetailMovieEffect, DetailMovieViewState>() {
     override fun initialState(): DetailMovieViewState = DetailMovieViewState()
 
     override fun handleOnAction(action: DetailMovieAction) {
         viewModelScope.launch {
             when (action) {
-                is DetailMovieAction.OnRequestDetail -> requestMovieDetail(action.id)
+                is DetailMovieAction.OnRequestDetail ->  {
+                    sendEvent(DetailMovieEvent.ShowLoading)
+                    requestMovieDetail(action.id)
+                    requestCast(action.id)
+                    sendEvent(DetailMovieEvent.DismissLoading)
+                }
                 is DetailMovieAction.OnClickWatchNow -> addToWatchNow(action.id)
             }
+        }
+    }
+
+    private suspend fun requestCast(id: Int) {
+        when (val result = getCastUseCase.execute(GetCastUseCaseParam(id))) {
+            is GetCastUseCaseResult.GetCastSuccess -> {
+                sendEvent(DetailMovieEvent.ShowCasts(result.castList.take(5)))
+            }
+
+            is GetCastUseCaseResult.GetCastFailure -> {
+                sendEvent(DetailMovieEvent.ShowError(result.errorMessage))
+            }
+
         }
     }
 
@@ -25,7 +50,6 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
     }
 
     private suspend fun requestMovieDetail(id: Int) {
-        sendEvent(DetailMovieEvent.ShowLoading)
         when (val result = getDetailMovieUseCase.execute(GetMovieDetailUseCaseParam(id))) {
             is GetMovieDetailUseCaseResult.Success -> {
                 sendEvent(DetailMovieEvent.ShowMovieDetail(result.movieDetail))
@@ -35,7 +59,6 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
                 sendEvent(DetailMovieEvent.ShowError(result.message))
             }
         }
-        sendEvent(DetailMovieEvent.DismissLoading)
     }
 
     override fun reduce(
@@ -50,15 +73,29 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
             posterPath = posterUrlReducer(oldState, event),
             title = titleReducer(oldState, event),
             overview = overviewReducer(oldState, event),
-            rating = ratingReducer(oldState, event)
+            rating = ratingReducer(oldState, event),
+            listCast = castReducer(oldState, event),
         )
+    }
+
+    private fun castReducer(
+        oldState: DetailMovieViewState,
+        event: DetailMovieEvent
+    ): List<CastUi> {
+        return when (event) {
+            is DetailMovieEvent.ShowCasts -> {
+                event.casts
+            }
+
+            else -> oldState.listCast
+        }
     }
 
     private fun ratingReducer(
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): Double {
-        return when(event) {
+        return when (event) {
             is DetailMovieEvent.ShowMovieDetail -> {
                 event.movieDetail.voteAverage
             }
@@ -71,7 +108,7 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): Int {
-        return when(event) {
+        return when (event) {
             is DetailMovieEvent.ShowMovieDetail -> {
                 event.movieDetail.voteCount
             }
@@ -84,7 +121,7 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): List<String> {
-    return when(event) {
+        return when (event) {
             is DetailMovieEvent.ShowMovieDetail -> {
                 event.movieDetail.genres.map { it.name }.take(2)
             }
@@ -98,7 +135,7 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): String {
-       return when (event) {
+        return when (event) {
             is DetailMovieEvent.ShowMovieDetail -> {
                 val hours = event.movieDetail.runtime / 60
                 val minutes = event.movieDetail.runtime % 60
@@ -113,7 +150,7 @@ class MovieDetailViewModel(val getDetailMovieUseCase: GetMovieDetailUseCase) :
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
     ): String {
-       return when (event) {
+        return when (event) {
             is DetailMovieEvent.ShowMovieDetail -> {
                 event.movieDetail.releaseDate.take(4)
             }
