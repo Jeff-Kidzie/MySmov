@@ -1,10 +1,10 @@
 package dev.me.mysmov.service
 
 import dev.me.mysmov.data.DataResponse
-import dev.me.mysmov.data.model.CastUi
 import dev.me.mysmov.data.model.Movie
 import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
+import dev.me.mysmov.data.model.dto.VideoTrailerDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -24,4 +24,7 @@ interface ApiService {
 
     @GET("movie/{movie_id}/credits?language=en-US")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<DataResponse<CastDto>>
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(@Path("movie_id") movieId: Int): Response<DataResponse<VideoTrailerDto>>
 }

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import dev.me.mysmov.data.model.ui.VideoTrailerUi
 import dev.me.mysmov.ui.component.AppButton
 import dev.me.mysmov.ui.component.ButtonType
 import dev.me.mysmov.ui.component.CastItem
@@ -66,26 +67,13 @@ fun MovieDetailScreen(
         }
     }
 
-    val trailers = listOf(
-        TrailerUiModel(
-            title = "Official Teaser: Journey to the Edge",
-            thumbnail = "https://images.unsplash.com/photo-1523966211575-eb4a01e7dd51?auto=format&fit=crop&w=800&q=80",
-            duration = "2:14"
-        ),
-        TrailerUiModel(
-            title = "Behind the Scenes",
-            thumbnail = "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=800&q=80",
-            duration = "1:32"
-        )
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         HeaderSection(movieDetailState, onBackClick)
-        ContentSection(movieDetailState = movieDetailState, trailers = trailers)
+        ContentSection(movieDetailState = movieDetailState)
     }
 }
 
@@ -206,7 +194,7 @@ private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: (
 }
 
 @Composable
-private fun ContentSection(movieDetailState: DetailMovieViewState, trailers: List<TrailerUiModel>) {
+private fun ContentSection(movieDetailState: DetailMovieViewState) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -285,7 +273,7 @@ private fun ContentSection(movieDetailState: DetailMovieViewState, trailers: Lis
                 )
             )
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(trailers) { trailer ->
+                items(movieDetailState.listTrailers) { trailer ->
                     TrailerCard(trailer)
                 }
             }
@@ -294,7 +282,7 @@ private fun ContentSection(movieDetailState: DetailMovieViewState, trailers: Lis
 }
 
 @Composable
-private fun TrailerCard(trailer: TrailerUiModel) {
+private fun TrailerCard(trailer: VideoTrailerUi) {
     Card(
         modifier = Modifier
             .width(280.dp)
@@ -302,16 +290,16 @@ private fun TrailerCard(trailer: TrailerUiModel) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(12.dp)
     ) {
-        Box {
+        Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
-                modifier = Modifier.matchParentSize(),
-                model = trailer.thumbnail,
+                modifier = Modifier.fillMaxSize(),
+                model = trailer.imgUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
             Box(
                 modifier = Modifier
-                    .matchParentSize()
+                    .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
                             listOf(
@@ -335,29 +323,20 @@ private fun TrailerCard(trailer: TrailerUiModel) {
                     tint = Color.White
                 )
             }
-            Column(
+            Text(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
+                    .align(Alignment.TopStart)
                     .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = trailer.title,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color.White,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = trailer.duration,
-                    style = MaterialTheme.typography.labelSmall.copy(color = Color.White.copy(alpha = 0.8f))
-                )
-            }
+                text = trailer.title,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
 
 data class CastUiModel(val name: String, val role: String, val imageUrl: String)
-data class TrailerUiModel(val title: String, val thumbnail: String, val duration: String)

@@ -2,18 +2,23 @@ package dev.me.mysmov.feature.detail
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
-import dev.me.mysmov.data.model.CastUi
+import dev.me.mysmov.data.model.ui.CastUi
+import dev.me.mysmov.data.model.ui.VideoTrailerUi
 import dev.me.mysmov.domain.GetCastUseCase
 import dev.me.mysmov.domain.GetCastUseCaseParam
 import dev.me.mysmov.domain.GetCastUseCaseResult
 import dev.me.mysmov.domain.GetMovieDetailUseCase
 import dev.me.mysmov.domain.GetMovieDetailUseCaseParam
 import dev.me.mysmov.domain.GetMovieDetailUseCaseResult
+import dev.me.mysmov.domain.GetVideoTrailersUseCase
+import dev.me.mysmov.domain.GetVideoTrailersUseCaseParam
+import dev.me.mysmov.domain.GetVideoTrailersUseCaseResult
 import kotlinx.coroutines.launch
 
 class MovieDetailViewModel(
     private val getDetailMovieUseCase: GetMovieDetailUseCase,
-    private val getCastUseCase: GetCastUseCase
+    private val getCastUseCase: GetCastUseCase,
+    private val getVideoTrailersUseCase: GetVideoTrailersUseCase
 ) :
     BaseViewModel<DetailMovieAction, DetailMovieEvent, DetailMovieEffect, DetailMovieViewState>() {
     override fun initialState(): DetailMovieViewState = DetailMovieViewState()
@@ -25,6 +30,7 @@ class MovieDetailViewModel(
                     sendEvent(DetailMovieEvent.ShowLoading)
                     requestMovieDetail(action.id)
                     requestCast(action.id)
+                    requestTrailers(action.id)
                     sendEvent(DetailMovieEvent.DismissLoading)
                 }
                 is DetailMovieAction.OnClickWatchNow -> addToWatchNow(action.id)
@@ -42,6 +48,18 @@ class MovieDetailViewModel(
                 sendEvent(DetailMovieEvent.ShowError(result.errorMessage))
             }
 
+        }
+    }
+
+    private suspend fun requestTrailers(id: Int) {
+        when (val result = getVideoTrailersUseCase.execute(GetVideoTrailersUseCaseParam(id))) {
+            is GetVideoTrailersUseCaseResult.Success -> {
+                sendEvent(DetailMovieEvent.ShowTrailers(result.trailerList.take(5)))
+            }
+
+            is GetVideoTrailersUseCaseResult.Error -> {
+                sendEvent(DetailMovieEvent.ShowError(result.errorMessage))
+            }
         }
     }
 
@@ -75,7 +93,21 @@ class MovieDetailViewModel(
             overview = overviewReducer(oldState, event),
             rating = ratingReducer(oldState, event),
             listCast = castReducer(oldState, event),
+            listTrailers = trailersReducer(oldState, event),
         )
+    }
+
+    private fun trailersReducer(
+        oldState: DetailMovieViewState,
+        event: DetailMovieEvent
+    ): List<VideoTrailerUi> {
+        return when (event) {
+            is DetailMovieEvent.ShowTrailers -> {
+                event.trailers
+            }
+
+            else -> oldState.listTrailers
+        }
     }
 
     private fun castReducer(

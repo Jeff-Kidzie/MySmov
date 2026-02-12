@@ -4,7 +4,7 @@ import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.CastUi
+import dev.me.mysmov.data.model.ui.CastUi
 import dev.me.mysmov.data.repository.MovieRepository
 import dev.me.mysmov.domain.GetCastUseCaseResult.*
 
