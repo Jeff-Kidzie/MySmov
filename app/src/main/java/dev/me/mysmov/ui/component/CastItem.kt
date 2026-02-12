@@ -41,7 +41,7 @@ fun CastItem(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = name,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
