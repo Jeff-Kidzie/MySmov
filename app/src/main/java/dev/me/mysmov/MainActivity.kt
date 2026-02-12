@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import dev.me.mysmov.feature.HomeContainer
+import dev.me.mysmov.navigation.RootNavGraph
 import dev.me.mysmov.ui.theme.MySmovTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             MySmovTheme {
-                HomeContainer()
+                RootNavGraph()
             }
         }
     }

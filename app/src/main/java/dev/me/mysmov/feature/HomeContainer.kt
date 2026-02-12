@@ -19,7 +19,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dev.me.mysmov.feature.detail.MovieDetailScreen
 import dev.me.mysmov.feature.home.HomeScreen
 import dev.me.mysmov.feature.profile.ProfileScreen
 import dev.me.mysmov.feature.search.SearchScreen
@@ -27,7 +26,9 @@ import dev.me.mysmov.navigation.BottomNavItem
 import dev.me.mysmov.navigation.bottomNavItems
 
 @Composable
-fun HomeContainer() {
+fun HomeContainer(
+    onNavigateToDetail: (Int) -> Unit = {}
+) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -40,15 +41,11 @@ fun HomeContainer() {
         ) {
             composable(BottomNavItem.Home.route) {
                 HomeScreen(
-                    onNavigateToDetail = { id -> navController.navigate("detail/$id") }
+                    onNavigateToDetail = onNavigateToDetail
                 )
             }
             composable(BottomNavItem.Search.route) { SearchScreen() }
             composable(BottomNavItem.Profile.route) { ProfileScreen() }
-            composable("detail/{movieId}") { backStackEntry ->
-                val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull() ?: 0
-                MovieDetailScreen(id = movieId,onBackClick = { navController.popBackStack() })
-            }
         }
     }
 }
