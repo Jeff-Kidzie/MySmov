@@ -7,9 +7,9 @@ import dev.me.mysmov.data.model.ui.VideoTrailerUi
 import dev.me.mysmov.domain.GetCastUseCase
 import dev.me.mysmov.domain.GetCastUseCaseParam
 import dev.me.mysmov.domain.GetCastUseCaseResult
-import dev.me.mysmov.domain.GetMovieDetailUseCase
-import dev.me.mysmov.domain.GetMovieDetailUseCaseParam
-import dev.me.mysmov.domain.GetMovieDetailUseCaseResult
+import dev.me.mysmov.domain.movies.GetMovieDetailUseCase
+import dev.me.mysmov.domain.movies.GetMovieDetailUseCaseParam
+import dev.me.mysmov.domain.movies.GetMovieDetailUseCaseResult
 import dev.me.mysmov.domain.GetVideoTrailersUseCase
 import dev.me.mysmov.domain.GetVideoTrailersUseCaseParam
 import dev.me.mysmov.domain.GetVideoTrailersUseCaseResult

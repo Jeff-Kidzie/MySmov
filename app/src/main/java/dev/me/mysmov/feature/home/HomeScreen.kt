@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MediaItem
 import dev.me.mysmov.ui.component.MovieBannerCard
 import dev.me.mysmov.ui.component.MovieItem
 import org.koin.androidx.compose.koinViewModel
@@ -49,7 +49,7 @@ fun HomeScreen(
     onNavigateToDetail: (Int) -> Unit = {}
 ) {
     val state by viewModel.viewState.collectAsState()
-    val onWatchClick = { id: Int ->
+    val onClickItem = { id: Int ->
         viewModel.onAction(HomeAction.OnClickMovie(id))
     }
 
@@ -63,27 +63,7 @@ fun HomeScreen(
     }
 
     val searchQuery = remember { mutableStateOf("") }
-    val popular = remember {
-        listOf(
-            Movie(4, "The Batman", "2022 • Action", "https://image.tmdb.org/t/p/original/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg", 8.1),
-            Movie(5, "John Wick 4", "2023 • Action", "https://image.tmdb.org/t/p/original/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg", 7.8),
-            Movie(6, "Interstellar", "2014 • Sci-Fi", "https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg", 8.6),
-        )
-    }
-    val upcoming = remember {
-        listOf(
-            Movie(10, "Deadpool 3", "2024 • Action", "https://image.tmdb.org/t/p/original/4XM8DUTQb3lhLemJC51Jx4a2EuA.jpg", 8.0),
-            Movie(11, "Gladiator 2", "2024 • Action", "https://image.tmdb.org/t/p/original/2XqQXTFjnLjEhBpCdSvkHIWr0kB.jpg", 7.9),
-            Movie(12, "Avatar 3", "2025 • Sci-Fi", "https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", 8.5),
-        )
-    }
-    val topRated = remember {
-        listOf(
-            Movie(7, "The Godfather", "Crime • 1972", "https://image.tmdb.org/t/p/original/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", 9.2),
-            Movie(8, "Shawshank Redemption", "Drama • 1994", "https://image.tmdb.org/t/p/original/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg", 9.3),
-            Movie(9, "Dune: Part Two", "2024 • Sci-Fi", "https://image.tmdb.org/t/p/original/2VK4d3mqqTc7LVZLnLPeRiPaJ71.jpg", 8.8),
-        )
-    }
+
 
     LazyColumn(
         modifier = Modifier
@@ -103,16 +83,18 @@ fun HomeScreen(
                 placeholder = { Text("Movies, actors, or genres...") }
             ) {}
         }
-        item { SectionNowPlaying(state.nowPlayingMovies, onWatchClick) }
+        item { SectionNowPlaying(state.nowPlayingMediaItems, onClickItem) }
         item { SectionHeader(title = "Popular", actionText = "") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(popular) { movie ->
+                items(state.popularMovies) { movie ->
                     MovieItem(
+                        id = movie.id,
                         imageUrl = movie.posterPath,
                         title = movie.title,
                         subtitle = movie.overview,
-                        rating = movie.rating
+                        rating = movie.rating,
+                        onClick = onClickItem
                     )
                 }
             }
@@ -120,12 +102,14 @@ fun HomeScreen(
         item { SectionHeader(title = "Upcoming", actionText = "") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(upcoming) { movie ->
+                items(state.upcomingMovies) { movie ->
                     MovieItem(
+                        id = movie.id,
                         imageUrl = movie.posterPath,
                         title = movie.title,
                         subtitle = movie.overview,
-                        rating = movie.rating
+                        rating = movie.rating,
+                        onClick = onClickItem
                     )
                 }
             }
@@ -133,12 +117,14 @@ fun HomeScreen(
         item { SectionHeader(title = "Top Rated", actionText = "See More") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(topRated) { movie ->
+                items(state.topRatedMovies) { movie ->
                     MovieItem(
+                        id = movie.id,
                         imageUrl = movie.posterPath,
                         title = movie.title,
                         subtitle = movie.overview,
-                        rating = movie.rating
+                        rating = movie.rating,
+                        onClick = onClickItem
                     )
                 }
             }
@@ -198,7 +184,7 @@ private fun SectionHeader(title: String, actionText: String) {
 }
 
 @Composable
-private fun SectionNowPlaying(cards: List<Movie>, onWatchNow : (Int) -> Unit = {}) {
+private fun SectionNowPlaying(cards: List<MediaItem>, onWatchNow : (Int) -> Unit = {}) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(title = "Now Playing", actionText = "View All")
         LazyRow(

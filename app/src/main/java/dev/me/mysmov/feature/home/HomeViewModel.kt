@@ -2,34 +2,90 @@ package dev.me.mysmov.feature.home
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
-import dev.me.mysmov.data.model.Movie
-import dev.me.mysmov.domain.MovieUseCase
-import dev.me.mysmov.domain.MovieUseCaseParam
-import dev.me.mysmov.domain.MovieUseCaseResult
-import dev.me.mysmov.domain.NowPlayingMovieUseCase
-import dev.me.mysmov.domain.NowPlayingMovieUseCaseParam
-import dev.me.mysmov.domain.NowPlayingMovieUseCaseResult
+import dev.me.mysmov.data.model.MediaItem
+import dev.me.mysmov.data.model.MovieCategory
+import dev.me.mysmov.domain.GetMovieByCategoryUseCase
+import dev.me.mysmov.domain.GetMovieByCategoryUseCaseParam
+import dev.me.mysmov.domain.GetMovieByCategoryUseCaseResult
+import dev.me.mysmov.domain.movies.NowPlayingMovieUseCase
+import dev.me.mysmov.domain.movies.NowPlayingMovieUseCaseParam
+import dev.me.mysmov.domain.movies.NowPlayingMovieUseCaseResult
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val discoverMovieUseCase: MovieUseCase,
+    private val getMovieByCategoryUseCase: GetMovieByCategoryUseCase,
     private val nowPlayingMovieUseCase: NowPlayingMovieUseCase
-) :
-    BaseViewModel<HomeAction, HomeEvent, HomeEffect, HomeViewState>() {
+) : BaseViewModel<HomeAction, HomeEvent, HomeEffect, HomeViewState>() {
     override fun initialState(): HomeViewState = HomeViewState()
 
     override fun handleOnAction(action: HomeAction) {
         viewModelScope.launch {
             when (action) {
                 HomeAction.InitPage, HomeAction.RefreshPage -> {
-                    requestMovieList()
+                    //TODO("request popular, top rated, upcoming movies")
+                    requestPopularMovies()
+                    requestTopRatedMovies()
+                    requestUpcomingMovies()
                     requestNowPlayingMovieList()
                 }
 
-                is HomeAction.OnClickMovie -> sendEffect(HomeEffect.ShowDetailMovie(action.id))
+                is HomeAction.OnClickMovie -> sendEffect(
+                    HomeEffect.ShowDetailMovie(
+                        action.id
+                    )
+                )
             }
         }
 
+    }
+
+    private suspend fun requestTopRatedMovies() {
+        val result = getMovieByCategoryUseCase.execute(
+            GetMovieByCategoryUseCaseParam(MovieCategory.TopRated)
+        )
+        when (result) {
+            is GetMovieByCategoryUseCaseResult.Error -> sendEvent(
+                HomeEvent.ShowError(result.message)
+            )
+            is GetMovieByCategoryUseCaseResult.Success -> sendEvent(
+                HomeEvent.ShowTopRatedMovies(result.mediaItems)
+            )
+        }
+    }
+
+    private suspend fun requestPopularMovies() {
+        sendEvent(HomeEvent.ShowLoading)
+        val result = getMovieByCategoryUseCase.execute(
+            GetMovieByCategoryUseCaseParam(MovieCategory.Popular)
+        )
+        when (result) {
+            is GetMovieByCategoryUseCaseResult.Error -> sendEvent(
+                HomeEvent.ShowError(
+                    result.message
+                )
+            )
+
+            is GetMovieByCategoryUseCaseResult.Success -> sendEvent(
+                HomeEvent.ShowPopularMovies(
+                    result.mediaItems
+                )
+            )
+        }
+        sendEvent(HomeEvent.DismissLoading)
+    }
+
+    private suspend fun requestUpcomingMovies() {
+        val result = getMovieByCategoryUseCase.execute(
+            GetMovieByCategoryUseCaseParam(MovieCategory.Upcoming)
+        )
+        when (result) {
+            is GetMovieByCategoryUseCaseResult.Error -> sendEvent(
+                HomeEvent.ShowError(result.message)
+            )
+            is GetMovieByCategoryUseCaseResult.Success -> sendEvent(
+                HomeEvent.ShowUpcomingMovies(result.mediaItems)
+            )
+        }
     }
 
     override fun reduce(
@@ -37,26 +93,53 @@ class HomeViewModel(
         event: HomeEvent,
     ): HomeViewState {
         return HomeViewState(
-            movies = moviesReducer(oldState, event),
-            nowPlayingMovies = nowPlayingReducer(oldState, event),
+            popularMovies = popularMoviesReducer(oldState, event),
+            upcomingMovies = upcomingMoviesReducer(oldState, event),
+            topRatedMovies = topRatedMoviesReducer(oldState, event),
+            nowPlayingMediaItems = nowPlayingReducer(oldState, event),
             isLoading = loadingReducer(oldState, event),
             errorMessage = errorMessageReducer(oldState, event)
         )
     }
 
-    private fun nowPlayingReducer(
-        oldState: HomeViewState,
-        event: HomeEvent
-    ): List<Movie> {
+    private fun topRatedMoviesReducer(
+        oldState: HomeViewState, event: HomeEvent
+    ): List<MediaItem> {
         return when (event) {
-            is HomeEvent.ShowNowPlayingMovies -> event.movies
-            else -> oldState.nowPlayingMovies
+            is HomeEvent.ShowTopRatedMovies -> event.mediaItems
+            else -> oldState.topRatedMovies
+        }
+    }
+
+    private fun upcomingMoviesReducer(
+        oldState: HomeViewState, event: HomeEvent
+    ): List<MediaItem> {
+        return when (event) {
+            is HomeEvent.ShowUpcomingMovies -> event.mediaItems
+            else -> oldState.upcomingMovies
+        }
+    }
+
+    private fun popularMoviesReducer(
+        oldState: HomeViewState, event: HomeEvent
+    ): List<MediaItem> {
+        return when (event) {
+            is HomeEvent.ShowPopularMovies -> event.mediaItems
+            else -> oldState.popularMovies
+        }
+    }
+
+    private fun nowPlayingReducer(
+        oldState: HomeViewState, event: HomeEvent
+    ): List<MediaItem> {
+        return when (event) {
+            is HomeEvent.ShowNowPlayingMovies -> event.mediaItems
+            else -> oldState.nowPlayingMediaItems
         }
     }
 
     private fun errorMessageReducer(
-        oldState: HomeViewState,
-        event: HomeEvent
+        oldState: HomeViewState, event: HomeEvent
     ): String {
         return when (event) {
             is HomeEvent.ShowError -> event.message
@@ -64,27 +147,14 @@ class HomeViewModel(
         }
     }
 
-    private fun loadingReducer(oldState: HomeViewState, event: HomeEvent): Boolean {
+    private fun loadingReducer(
+        oldState: HomeViewState,
+        event: HomeEvent
+    ): Boolean {
         return when (event) {
             HomeEvent.ShowLoading -> true
             HomeEvent.DismissLoading -> false
             else -> oldState.isLoading
-        }
-    }
-
-    private fun moviesReducer(oldState: HomeViewState, event: HomeEvent): List<Movie> =
-        when (event) {
-            is HomeEvent.ShowMovies -> event.movies
-            else -> oldState.movies
-        }
-
-    private suspend fun requestMovieList() {
-        sendEvent(HomeEvent.ShowLoading)
-        val result = discoverMovieUseCase.execute(MovieUseCaseParam)
-        sendEvent(HomeEvent.DismissLoading)
-        when (result) {
-            is MovieUseCaseResult.Error -> HomeEvent.ShowError(result.message)
-            is MovieUseCaseResult.Success -> HomeEvent.ShowMovies(result.movies)
         }
     }
 
@@ -93,10 +163,15 @@ class HomeViewModel(
         val result = nowPlayingMovieUseCase.execute(NowPlayingMovieUseCaseParam)
         sendEvent(HomeEvent.DismissLoading)
         when (result) {
-            is NowPlayingMovieUseCaseResult.Error -> sendEvent(HomeEvent.ShowError(result.message))
+            is NowPlayingMovieUseCaseResult.Error -> sendEvent(
+                HomeEvent.ShowError(
+                    result.message
+                )
+            )
+
             is NowPlayingMovieUseCaseResult.Success -> sendEvent(
                 HomeEvent.ShowNowPlayingMovies(
-                    result.movies
+                    result.mediaItems
                 )
             )
         }

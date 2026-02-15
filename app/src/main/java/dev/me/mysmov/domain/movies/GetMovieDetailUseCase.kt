@@ -1,4 +1,4 @@
-package dev.me.mysmov.domain
+package dev.me.mysmov.domain.movies
 
 import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam

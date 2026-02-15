@@ -5,7 +5,7 @@ import dev.me.mysmov.core.base.Effect
 import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
 import dev.me.mysmov.data.model.ui.CastUi
-import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MediaItem
 import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.model.ui.VideoTrailerUi
 
@@ -40,6 +40,6 @@ sealed class DetailMovieEvent : Event{
     object DismissLoading : DetailMovieEvent()
     data class ShowError(val message : String) : DetailMovieEvent()
     data class ShowCasts(val casts : List<CastUi>) : DetailMovieEvent()
-    data class ShowRelatedMovies(val movies : List<Movie>) : DetailMovieEvent()
+    data class ShowRelatedMovies(val mediaItems : List<MediaItem>) : DetailMovieEvent()
     data class ShowTrailers(val trailers : List<VideoTrailerUi>) : DetailMovieEvent()
 }

@@ -1,9 +1,10 @@
-package dev.me.mysmov.domain
+package dev.me.mysmov.domain.movies
 
 import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
+import dev.me.mysmov.data.model.MediaItem
 import dev.me.mysmov.data.repository.MovieRepository
 
 class NowPlayingMovieUseCase(val movieRepository: MovieRepository) :
@@ -19,7 +20,7 @@ class NowPlayingMovieUseCase(val movieRepository: MovieRepository) :
 
 object NowPlayingMovieUseCaseParam : UseCaseParam
 sealed class NowPlayingMovieUseCaseResult : UseCaseResult {
-    data class Success(val movies: List<dev.me.mysmov.data.model.Movie>) :
+    data class Success(val mediaItems: List<MediaItem>) :
         NowPlayingMovieUseCaseResult()
 
     data class Error(val message: String) : NowPlayingMovieUseCaseResult()

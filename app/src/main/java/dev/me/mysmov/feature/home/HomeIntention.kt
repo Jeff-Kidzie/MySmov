@@ -4,7 +4,7 @@ import dev.me.mysmov.core.base.Action
 import dev.me.mysmov.core.base.Effect
 import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
-import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MediaItem
 
 sealed class HomeAction : Action {
     object InitPage : HomeAction()
@@ -14,16 +14,20 @@ sealed class HomeAction : Action {
 
 data class HomeViewState(
     val isLoading : Boolean = false,
-    val movies : List<Movie> = emptyList(),
-    val nowPlayingMovies : List<Movie> = emptyList(),
+    val popularMovies : List<MediaItem> = emptyList(),
+    val nowPlayingMediaItems : List<MediaItem> = emptyList(),
+    val topRatedMovies : List<MediaItem> = emptyList(),
+    val upcomingMovies : List<MediaItem> = emptyList(),
     val errorMessage : String = "",
 ) : ViewState
 
 sealed class HomeEvent : Event {
     object ShowLoading : HomeEvent()
     object DismissLoading : HomeEvent()
-    data class ShowMovies(val movies : List<Movie>) : HomeEvent()
-    data class ShowNowPlayingMovies(val movies : List<Movie>) : HomeEvent()
+    data class ShowPopularMovies(val mediaItems : List<MediaItem>) : HomeEvent()
+    data class ShowTopRatedMovies(val mediaItems : List<MediaItem>) : HomeEvent()
+    data class ShowUpcomingMovies(val mediaItems : List<MediaItem>) : HomeEvent()
+    data class ShowNowPlayingMovies(val mediaItems : List<MediaItem>) : HomeEvent()
     data class ShowError(val message : String) : HomeEvent()
 }
 
