@@ -70,6 +70,13 @@ fun HomeScreen(
             Movie(6, "Interstellar", "2014 • Sci-Fi", "https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg", 8.6),
         )
     }
+    val upcoming = remember {
+        listOf(
+            Movie(10, "Deadpool 3", "2024 • Action", "https://image.tmdb.org/t/p/original/4XM8DUTQb3lhLemJC51Jx4a2EuA.jpg", 8.0),
+            Movie(11, "Gladiator 2", "2024 • Action", "https://image.tmdb.org/t/p/original/2XqQXTFjnLjEhBpCdSvkHIWr0kB.jpg", 7.9),
+            Movie(12, "Avatar 3", "2025 • Sci-Fi", "https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", 8.5),
+        )
+    }
     val topRated = remember {
         listOf(
             Movie(7, "The Godfather", "Crime • 1972", "https://image.tmdb.org/t/p/original/3bhkrj58Vtu7enYsRolD1fZdja1.jpg", 9.2),
@@ -101,6 +108,19 @@ fun HomeScreen(
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(popular) { movie ->
+                    MovieItem(
+                        imageUrl = movie.posterPath,
+                        title = movie.title,
+                        subtitle = movie.overview,
+                        rating = movie.rating
+                    )
+                }
+            }
+        }
+        item { SectionHeader(title = "Upcoming", actionText = "") }
+        item {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                items(upcoming) { movie ->
                     MovieItem(
                         imageUrl = movie.posterPath,
                         title = movie.title,
