@@ -1,6 +1,7 @@
 package dev.me.mysmov.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,13 +26,18 @@ import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun MovieItem(
+    id : Int,
     imageUrl: String,
     title: String = "",
     subtitle: String = "", // e.g. "2022 • Action"
     rating: Double? = null,
+    onClick: (Int) -> Unit = {},
 ) {
 
-    Column(modifier = Modifier.width(140.dp)) {
+    Column(modifier = Modifier
+        .width(140.dp)
+        .clickable { onClick(id) }
+    ) {
         Box {
             AsyncImage(
                 modifier = Modifier
@@ -86,9 +92,13 @@ fun MovieItem(
 @Composable
 fun MovieItemPreview() {
     MovieItem(
+        id = 1,
         imageUrl = "https://image.tmdb.org/t/p/original/2VK4d3mqqTc7LVZLnLPeRiPaJ71.jpg",
         title = "John Wick 4",
         subtitle = "2023 • Action",
-        rating = 7.8
+        rating = 7.8,
+        onClick = { id ->
+            // handle click with id
+        }
     )
 }

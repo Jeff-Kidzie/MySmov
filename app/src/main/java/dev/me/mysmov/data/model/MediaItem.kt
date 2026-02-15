@@ -2,7 +2,7 @@ package dev.me.mysmov.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Movie(
+data class MediaItem(
     val id: Int,
     val title: String,
     val overview: String,

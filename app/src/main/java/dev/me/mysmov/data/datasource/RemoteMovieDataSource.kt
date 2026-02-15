@@ -4,7 +4,7 @@ import dev.me.mysmov.core.AppConstant
 import dev.me.mysmov.core.network.CallResult
 import dev.me.mysmov.core.network.callApi
 import dev.me.mysmov.core.network.transform
-import dev.me.mysmov.data.model.Movie
+import dev.me.mysmov.data.model.MediaItem
 import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
@@ -12,15 +12,15 @@ import dev.me.mysmov.data.repository.MovieRepository
 import dev.me.mysmov.service.ApiService
 
 class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepository {
-    override suspend fun getDiscoverMovies(): CallResult<List<Movie>> {
+    override suspend fun getDiscoverMovies(): CallResult<List<MediaItem>> {
         val result = callApi { apiService.getDiscoverMovie() }
         return result
     }
 
-    override suspend fun getNowPlayingMovies(): CallResult<List<Movie>> {
+    override suspend fun getNowPlayingMovies(): CallResult<List<MediaItem>> {
         return callApi { apiService.getNowPlayingMovie() }.transform { dataResponse ->
             dataResponse.results.map { movie ->
-                Movie(
+                MediaItem(
                     id = movie.id,
                     title = movie.title,
                     overview = movie.overview,
@@ -60,5 +60,35 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
         return callApi { apiService.getMovieVideos(movieId) }.transform { dataResponse ->
             dataResponse.results
         }
+    }
+
+    override suspend fun getMoviesByCategory(
+        category: String,
+        page: Int
+    ): CallResult<List<MediaItem>> {
+        return callApi { apiService.getMovieByCategory(category, page) }.transform { dataResponse ->
+            dataResponse.results.map { movie ->
+                MediaItem(
+                    id = movie.id,
+                    title = movie.title,
+                    overview = movie.overview,
+                    posterPath = if (movie.posterPath.startsWith("http")) {
+                        movie.posterPath
+                    } else {
+                        AppConstant.BASE_URL_IMAGE + movie.posterPath
+                    },
+                    rating = movie.rating,
+                    backdropPath =  AppConstant.BASE_URL_IMAGE + movie.backdropPath,
+                    releaseDate = movie.releaseDate
+                )
+            }
+        }
+    }
+
+    override suspend fun getTvByCategory(
+        category: String,
+        page: Int
+    ): CallResult<List<MediaItem>> {
+        TODO("Not yet implemented")
     }
 }
