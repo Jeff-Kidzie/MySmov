@@ -31,6 +31,7 @@ fun MovieItem(
     title: String = "",
     subtitle: String = "", // e.g. "2022 • Action"
     rating: Double? = null,
+    isLoading: Boolean = false,
     onClick: (Int) -> Unit = {},
 ) {
 
@@ -38,51 +39,76 @@ fun MovieItem(
         .width(140.dp)
         .clickable { onClick(id) }
     ) {
-        Box {
-            AsyncImage(
-                modifier = Modifier
-                    .height(200.dp)
-                    .width(140.dp),
-                model = imageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-            rating?.let {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+        Box(
+            modifier = Modifier
+                .height(200.dp)
+                .width(140.dp)
+                .shimmer(isLoading, cornerRadius = 8.dp)
+        ) {
+            if (!isLoading) {
+                AsyncImage(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(6.dp)
-                        .background(color = Color(0xCC000000), shape = MaterialTheme.shapes.small)
-                        .padding(horizontal = 6.dp, vertical = 4.dp)
-                ) {
-                    androidx.compose.material3.Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = null,
-                        tint = Color(0xFFFFD166),
-                        modifier = Modifier.height(14.dp)
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(text = String.format("%.1f", it), style = MaterialTheme.typography.labelMedium, color = Color.White)
+                        .height(200.dp)
+                        .width(140.dp),
+                    model = imageUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                rating?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(6.dp)
+                            .background(color = Color(0xCC000000), shape = MaterialTheme.shapes.small)
+                            .padding(horizontal = 6.dp, vertical = 4.dp)
+                    ) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = null,
+                            tint = Color(0xFFFFD166),
+                            modifier = Modifier.height(14.dp)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(text = String.format("%.1f", it), style = MaterialTheme.typography.labelMedium, color = Color.White)
+                    }
                 }
             }
         }
         Spacer(Modifier.height(8.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(Modifier.height(2.dp))
-        if (subtitle.isNotBlank()) {
+        if (isLoading) {
+            // Shimmer for title
+            Box(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(16.dp)
+                    .shimmer(true, cornerRadius = 4.dp)
+            )
+            Spacer(Modifier.height(4.dp))
+            // Shimmer for subtitle
+            Box(
+                modifier = Modifier
+                    .width(70.dp)
+                    .height(12.dp)
+                    .shimmer(true, cornerRadius = 4.dp)
+            )
+        } else {
             Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                text = title,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            Spacer(Modifier.height(2.dp))
+            if (subtitle.isNotBlank()) {
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 

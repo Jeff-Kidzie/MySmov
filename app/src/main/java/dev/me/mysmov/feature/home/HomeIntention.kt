@@ -13,7 +13,10 @@ sealed class HomeAction : Action {
 }
 
 data class HomeViewState(
-    val isLoading : Boolean = false,
+    val isLoadingPopular : Boolean = true,
+    val isLoadingTopRated : Boolean = true,
+    val isLoadingUpcoming : Boolean = true,
+    val isLoadingNowPlaying : Boolean = true,
     val popularMovies : List<MediaItem> = emptyList(),
     val nowPlayingMediaItems : List<MediaItem> = emptyList(),
     val topRatedMovies : List<MediaItem> = emptyList(),
@@ -22,8 +25,15 @@ data class HomeViewState(
 ) : ViewState
 
 sealed class HomeEvent : Event {
-    object ShowLoading : HomeEvent()
-    object DismissLoading : HomeEvent()
+    object ShowLoadingPopular : HomeEvent()
+    object DismissLoadingPopular : HomeEvent()
+    object ShowLoadingTopRated : HomeEvent()
+    object DismissLoadingTopRated : HomeEvent()
+    object ShowLoadingUpcoming : HomeEvent()
+    object DismissLoadingUpcoming : HomeEvent()
+    object ShowLoadingNowPlaying : HomeEvent()
+    object DismissLoadingNowPlaying : HomeEvent()
+
     data class ShowPopularMovies(val mediaItems : List<MediaItem>) : HomeEvent()
     data class ShowTopRatedMovies(val mediaItems : List<MediaItem>) : HomeEvent()
     data class ShowUpcomingMovies(val mediaItems : List<MediaItem>) : HomeEvent()

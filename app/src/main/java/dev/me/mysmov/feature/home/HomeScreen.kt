@@ -83,49 +83,100 @@ fun HomeScreen(
                 placeholder = { Text("Movies, actors, or genres...") }
             ) {}
         }
-        item { SectionNowPlaying(state.nowPlayingMediaItems, onClickItem) }
+        item {
+            SectionNowPlaying(
+                state.nowPlayingMediaItems,
+                state.isLoadingNowPlaying,
+                onClickItem
+            )
+        }
         item { SectionHeader(title = "Popular", actionText = "") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.popularMovies) { movie ->
-                    MovieItem(
-                        id = movie.id,
-                        imageUrl = movie.posterPath,
-                        title = movie.title,
-                        subtitle = movie.overview,
-                        rating = movie.rating,
-                        onClick = onClickItem
-                    )
+                if (state.isLoadingPopular && state.popularMovies.isEmpty()) {
+                    items(5) {
+                        MovieItem(
+                            id = 0,
+                            imageUrl = "",
+                            title = "",
+                            subtitle = "",
+                            rating = null,
+                            isLoading = true,
+                            onClick = {}
+                        )
+                    }
+                } else {
+                    items(state.popularMovies) { movie ->
+                        MovieItem(
+                            id = movie.id,
+                            imageUrl = movie.posterPath,
+                            title = movie.title,
+                            subtitle = movie.overview,
+                            rating = movie.rating,
+                            isLoading = false,
+                            onClick = onClickItem
+                        )
+                    }
                 }
             }
         }
         item { SectionHeader(title = "Upcoming", actionText = "") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.upcomingMovies) { movie ->
-                    MovieItem(
-                        id = movie.id,
-                        imageUrl = movie.posterPath,
-                        title = movie.title,
-                        subtitle = movie.overview,
-                        rating = movie.rating,
-                        onClick = onClickItem
-                    )
+                if (state.isLoadingUpcoming && state.upcomingMovies.isEmpty()) {
+                    items(5) {
+                        MovieItem(
+                            id = 0,
+                            imageUrl = "",
+                            title = "",
+                            subtitle = "",
+                            rating = null,
+                            isLoading = true,
+                            onClick = {}
+                        )
+                    }
+                } else {
+                    items(state.upcomingMovies) { movie ->
+                        MovieItem(
+                            id = movie.id,
+                            imageUrl = movie.posterPath,
+                            title = movie.title,
+                            subtitle = movie.overview,
+                            rating = movie.rating,
+                            isLoading = false,
+                            onClick = onClickItem
+                        )
+                    }
                 }
             }
         }
         item { SectionHeader(title = "Top Rated", actionText = "See More") }
         item {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(state.topRatedMovies) { movie ->
-                    MovieItem(
-                        id = movie.id,
-                        imageUrl = movie.posterPath,
-                        title = movie.title,
-                        subtitle = movie.overview,
-                        rating = movie.rating,
-                        onClick = onClickItem
-                    )
+                if (state.isLoadingTopRated && state.topRatedMovies.isEmpty()) {
+                    items(5) {
+                        MovieItem(
+                            id = 0,
+                            imageUrl = "",
+                            title = "",
+                            subtitle = "",
+                            rating = null,
+                            isLoading = true,
+                            onClick = {}
+                        )
+                    }
+                } else {
+                    items(state.topRatedMovies) { movie ->
+                        MovieItem(
+                            id = movie.id,
+                            imageUrl = movie.posterPath,
+                            title = movie.title,
+                            subtitle = movie.overview,
+                            rating = movie.rating,
+                            isLoading = false,
+                            onClick = onClickItem
+                        )
+                    }
                 }
             }
         }
@@ -151,7 +202,10 @@ private fun Header() {
             Text(text = "🎬", style = MaterialTheme.typography.titleMedium)
         }
         Spacer(Modifier.width(10.dp))
-        Text("Discover", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold))
+        Text(
+            "Discover",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+        )
         Spacer(Modifier.weight(1f))
         Spacer(Modifier.width(14.dp))
         Box(
@@ -172,34 +226,67 @@ private fun SectionHeader(title: String, actionText: String) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold))
+        Text(
+            title,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+        )
         Spacer(Modifier.weight(1f))
         if (actionText.isNotBlank()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(actionText, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Text(
+                    actionText,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
 }
 
 @Composable
-private fun SectionNowPlaying(cards: List<MediaItem>, onWatchNow : (Int) -> Unit = {}) {
+private fun SectionNowPlaying(
+    cards: List<MediaItem>,
+    isLoading: Boolean,
+    onWatchNow: (Int) -> Unit = {}
+) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         SectionHeader(title = "Now Playing", actionText = "View All")
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(end = 16.dp)
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                end = 16.dp
+            )
         ) {
-            items(cards) { card ->
-                MovieBannerCard(
-                    modifier = Modifier.width(320.dp),
-                    id = card.id,
-                    imageUrl = card.backdropPath,
-                    title = card.title,
-                    rating = card.rating,
-                    onWatchNowClick = onWatchNow
-                )
+            if (isLoading && cards.isEmpty()) {
+                // Show shimmer placeholders when loading
+                items(3) {
+                    MovieBannerCard(
+                        modifier = Modifier.width(320.dp),
+                        id = 0,
+                        imageUrl = "",
+                        title = "",
+                        rating = 0.0,
+                        isLoading = true,
+                        onWatchNowClick = {}
+                    )
+                }
+            } else {
+                items(cards) { card ->
+                    MovieBannerCard(
+                        modifier = Modifier.width(320.dp),
+                        id = card.id,
+                        imageUrl = card.backdropPath,
+                        title = card.title,
+                        rating = card.rating,
+                        isLoading = false,
+                        onWatchNowClick = onWatchNow
+                    )
+                }
             }
         }
     }

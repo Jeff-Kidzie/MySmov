@@ -38,6 +38,7 @@ fun MovieBannerCard(
     imageUrl: String,
     title: String,
     rating: Double,
+    isLoading: Boolean = true,
     onWatchNowClick: (Int) -> Unit = {},
     onAddClick: () -> Unit = {},
 ) {
@@ -46,65 +47,75 @@ fun MovieBannerCard(
             .fillMaxWidth()
             .height(220.dp)
             .clip(RoundedCornerShape(20.dp))
+            .shimmer(isLoading, cornerRadius = 20.dp)
     ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Black.copy(alpha = 0.2f))
-        )
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color(0xCC000000), shape = RoundedCornerShape(12.dp))
-                    .padding(all = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    tint = Color(0xFFFFD166),
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(Modifier.width(6.dp))
-                Text(
-                    String.format("%.1f", rating),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                color = Color.White
+        if (!isLoading) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.Black.copy(alpha = 0.2f))
+            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                AppButton(
-                    onClickButton = { onWatchNowClick(id) },
-                    text = "Watch Now",
-                    modifier = Modifier.fillMaxWidth(0.7f),
-                    type = ButtonType.Primary
-                )
-                Button(
-                    onClick = onAddClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0x33FFFFFF)),
-                    shape = RoundedCornerShape(14.dp)
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(
+                            Color(0xCC000000),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(all = 4.dp)
                 ) {
-                    Text("+", color = Color.White)
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        tint = Color(0xFFFFD166),
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        String.format("%.1f", rating),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AppButton(
+                        onClickButton = { onWatchNowClick(id) },
+                        text = "Watch Now",
+                        modifier = Modifier.fillMaxWidth(0.7f),
+                        type = ButtonType.Primary
+                    )
+                    Button(
+                        onClick = onAddClick,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(
+                                0x33FFFFFF
+                            )
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text("+", color = Color.White)
+                    }
                 }
             }
         }
