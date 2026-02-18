@@ -11,6 +11,7 @@ import dev.me.mysmov.data.model.ui.VideoTrailerUi
 
 
 data class DetailMovieViewState(
+    val isLoading : Boolean = true,
     val imgUrl : String = "",
     val posterPath : String = "",
     val overview : String = "",

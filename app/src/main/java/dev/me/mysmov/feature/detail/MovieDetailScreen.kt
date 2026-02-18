@@ -48,6 +48,7 @@ import coil3.compose.AsyncImage
 import dev.me.mysmov.data.model.ui.VideoTrailerUi
 import dev.me.mysmov.ui.component.AppButton
 import dev.me.mysmov.ui.component.ButtonType
+import dev.me.mysmov.ui.component.shimmer
 import dev.me.mysmov.ui.component.CastItem
 import org.koin.androidx.compose.koinViewModel
 
@@ -82,15 +83,26 @@ fun MovieDetailScreen(
 
 @Composable
 private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: () -> Unit) {
+    val isLoading = movieDetailState.isLoading
     Box(modifier = Modifier.fillMaxWidth()) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(420.dp),
-            model = movieDetailState.imgUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
+        if (isLoading) {
+            // Shimmer placeholder for backdrop image
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(420.dp)
+                    .shimmer(true, cornerRadius = 0.dp)
+            )
+        } else {
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(420.dp),
+                model = movieDetailState.imgUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -146,51 +158,91 @@ private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: (
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .width(110.dp)
-                    .height(160.dp)
-                    .clip(RoundedCornerShape(14.dp)),
-                model = movieDetailState.posterPath,
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+            if (isLoading) {
+                // Shimmer placeholder for poster
+                Box(
+                    modifier = Modifier
+                        .width(110.dp)
+                        .height(160.dp)
+                        .shimmer(true, cornerRadius = 14.dp)
+                )
+            } else {
+                AsyncImage(
+                    modifier = Modifier
+                        .width(110.dp)
+                        .height(160.dp)
+                        .clip(RoundedCornerShape(14.dp)),
+                    model = movieDetailState.posterPath,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(
-                    text = movieDetailState.title,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+                if (isLoading) {
+                    // Shimmer placeholder for title
+                    Box(
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(28.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
                     )
-                )
-                Text(
-                    text = "${movieDetailState.yearRelease}  •  ${movieDetailState.duration}  \n ${movieDetailState.listGenres.joinToString()}",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.85f))
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.FavoriteBorder,
-                        contentDescription = null,
-                        tint = Color(0xFFFFD166)
+                    // Shimmer placeholder for details
+                    Box(
+                        modifier = Modifier
+                            .width(140.dp)
+                            .height(18.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
                     )
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(18.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
+                    )
+                    // Shimmer placeholder for rating
+                    Box(
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(18.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
+                    )
+                } else {
                     Text(
-                        text = "%.1f".format(movieDetailState.rating),
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        text = movieDetailState.title,
+                        style = MaterialTheme.typography.headlineSmall.copy(
                             color = Color.White,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.Bold
                         )
                     )
                     Text(
-                        text = "(${movieDetailState.countReviews} reviews)",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            color = Color.White.copy(
-                                alpha = 0.75f
+                        text = "${movieDetailState.yearRelease}  •  ${movieDetailState.duration}  \n ${movieDetailState.listGenres.joinToString()}",
+                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.85f))
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color(0xFFFFD166)
+                        )
+                        Text(
+                            text = "%.1f".format(movieDetailState.rating),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = Color.White,
+                                fontWeight = FontWeight.SemiBold
                             )
                         )
-                    )
+                        Text(
+                            text = "(${movieDetailState.countReviews} reviews)",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color = Color.White.copy(
+                                    alpha = 0.75f
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -199,6 +251,7 @@ private fun HeaderSection(movieDetailState: DetailMovieViewState, onBackClick: (
 
 @Composable
 private fun ContentSection(movieDetailState: DetailMovieViewState) {
+    val isLoading = movieDetailState.isLoading
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,14 +282,38 @@ private fun ContentSection(movieDetailState: DetailMovieViewState) {
                     fontWeight = FontWeight.SemiBold
                 )
             )
-            Text(
-                text = movieDetailState.overview,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.85f
+            if (isLoading) {
+                // Shimmer placeholder for synopsis
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(16.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(16.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.7f)
+                            .height(16.dp)
+                            .shimmer(true, cornerRadius = 4.dp)
+                    )
+                }
+            } else {
+                Text(
+                    text = movieDetailState.overview,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.85f
+                        )
                     )
                 )
-            )
+            }
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -258,13 +335,19 @@ private fun ContentSection(movieDetailState: DetailMovieViewState) {
                 )
             }
             LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                val castMembers = movieDetailState.listCast
-                items(castMembers) { cast ->
-                    CastItem(
-                        name = cast.name,
-                        role = cast.role,
-                        imageUrl = cast.imgUrl
-                    )
+                if (isLoading && movieDetailState.listCast.isEmpty()) {
+                    // Shimmer placeholders for cast
+                    items(5) {
+                        CastItemShimmer()
+                    }
+                } else {
+                    items(movieDetailState.listCast) { cast ->
+                        CastItem(
+                            name = cast.name,
+                            role = cast.role,
+                            imageUrl = cast.imgUrl
+                        )
+                    }
                 }
             }
         }
@@ -278,12 +361,56 @@ private fun ContentSection(movieDetailState: DetailMovieViewState) {
                 )
             )
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(movieDetailState.listTrailers) { trailer ->
-                    TrailerCard(trailer)
+                if (isLoading && movieDetailState.listTrailers.isEmpty()) {
+                    // Shimmer placeholders for trailers
+                    items(3) {
+                        TrailerCardShimmer()
+                    }
+                } else {
+                    items(movieDetailState.listTrailers) { trailer ->
+                        TrailerCard(trailer)
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun CastItemShimmer() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(70.dp)
+                .clip(CircleShape)
+                .shimmer(true, cornerRadius = 35.dp)
+        )
+        Box(
+            modifier = Modifier
+                .width(60.dp)
+                .height(14.dp)
+                .shimmer(true, cornerRadius = 4.dp)
+        )
+        Box(
+            modifier = Modifier
+                .width(50.dp)
+                .height(12.dp)
+                .shimmer(true, cornerRadius = 4.dp)
+        )
+    }
+}
+
+@Composable
+private fun TrailerCardShimmer() {
+    Box(
+        modifier = Modifier
+            .width(280.dp)
+            .height(160.dp)
+            .shimmer(true, cornerRadius = 12.dp)
+    )
 }
 
 @Composable

@@ -83,6 +83,7 @@ class MovieDetailViewModel(
         oldState: DetailMovieViewState, event: DetailMovieEvent
     ): DetailMovieViewState {
         return DetailMovieViewState(
+            isLoading = isLoadingReducer(oldState, event),
             imgUrl = imgUrlReducer(oldState, event),
             yearRelease = yearReducer(oldState, event),
             duration = durationReducer(oldState, event),
@@ -95,6 +96,17 @@ class MovieDetailViewModel(
             listCast = castReducer(oldState, event),
             listTrailers = trailersReducer(oldState, event),
         )
+    }
+
+    private fun isLoadingReducer(
+        oldState: DetailMovieViewState,
+        event: DetailMovieEvent
+    ): Boolean {
+        return when (event) {
+            is DetailMovieEvent.ShowLoading -> true
+            is DetailMovieEvent.DismissLoading -> false
+            else -> oldState.isLoading
+        }
     }
 
     private fun trailersReducer(
