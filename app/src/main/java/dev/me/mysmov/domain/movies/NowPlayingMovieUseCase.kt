@@ -4,8 +4,8 @@ import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.repository.MovieRepository
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.repository.MovieRepository
 
 class NowPlayingMovieUseCase(val movieRepository: MovieRepository) :
     BaseUseCase<NowPlayingMovieUseCaseParam, NowPlayingMovieUseCaseResult> {

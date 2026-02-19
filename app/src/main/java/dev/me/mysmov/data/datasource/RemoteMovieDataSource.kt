@@ -4,12 +4,12 @@ import dev.me.mysmov.core.AppConstant
 import dev.me.mysmov.core.network.CallResult
 import dev.me.mysmov.core.network.callApi
 import dev.me.mysmov.core.network.transform
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieDetail
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
-import dev.me.mysmov.data.repository.MovieRepository
-import dev.me.mysmov.service.ApiService
+import dev.me.mysmov.domain.repository.MovieRepository
+import dev.me.mysmov.data.remote.ApiService
 
 class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepository {
     override suspend fun getDiscoverMovies(): CallResult<List<MediaItem>> {

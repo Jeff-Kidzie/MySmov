@@ -4,7 +4,7 @@ import dev.me.mysmov.core.base.Action
 import dev.me.mysmov.core.base.Effect
 import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
-import dev.me.mysmov.data.model.MediaItem
+import dev.me.mysmov.domain.model.MediaItem
 
 sealed class HomeAction : Action {
     object InitPage : HomeAction()

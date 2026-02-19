@@ -4,8 +4,8 @@ import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.MovieDetail
-import dev.me.mysmov.data.repository.MovieRepository
+import dev.me.mysmov.domain.model.MovieDetail
+import dev.me.mysmov.domain.repository.MovieRepository
 
 class GetMovieDetailUseCase(private val movieRepository: MovieRepository) : BaseUseCase<GetMovieDetailUseCaseParam, GetMovieDetailUseCaseResult> {
     override suspend fun execute(param: GetMovieDetailUseCaseParam): GetMovieDetailUseCaseResult {

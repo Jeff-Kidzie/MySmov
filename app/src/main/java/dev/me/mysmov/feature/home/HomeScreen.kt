@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import dev.me.mysmov.data.model.MediaItem
+import dev.me.mysmov.domain.model.MediaItem
 import dev.me.mysmov.ui.component.MovieBannerCard
 import dev.me.mysmov.ui.component.MovieItem
 import org.koin.androidx.compose.koinViewModel

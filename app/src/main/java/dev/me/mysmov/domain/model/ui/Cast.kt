@@ -1,4 +1,4 @@
-package dev.me.mysmov.data.model.ui
+package dev.me.mysmov.domain.model.ui
 
 data class CastUi(
     val id : Int,

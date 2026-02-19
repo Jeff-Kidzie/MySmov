@@ -1,9 +1,9 @@
 package dev.me.mysmov.di
 
-import dev.me.mysmov.domain.GetCastUseCase
+import dev.me.mysmov.domain.usecase.GetCastUseCase
 import dev.me.mysmov.domain.movies.GetMovieDetailUseCase
-import dev.me.mysmov.domain.GetVideoTrailersUseCase
-import dev.me.mysmov.domain.GetMovieByCategoryUseCase
+import dev.me.mysmov.domain.usecase.GetVideoTrailersUseCase
+import dev.me.mysmov.domain.usecase.GetMovieByCategoryUseCase
 import dev.me.mysmov.domain.movies.NowPlayingMovieUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

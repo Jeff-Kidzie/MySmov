@@ -1,4 +1,4 @@
-package dev.me.mysmov.data.model
+package dev.me.mysmov.domain.model
 
 sealed class MovieCategory(val name : String) {
     object Popular : MovieCategory("popular")

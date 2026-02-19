@@ -1,4 +1,4 @@
-package dev.me.mysmov.data.model
+package dev.me.mysmov.domain.model
 
 data class Genre(
     val id : Int,

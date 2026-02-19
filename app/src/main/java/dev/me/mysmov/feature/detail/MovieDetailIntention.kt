@@ -4,10 +4,10 @@ import dev.me.mysmov.core.base.Action
 import dev.me.mysmov.core.base.Effect
 import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
-import dev.me.mysmov.data.model.ui.CastUi
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieDetail
-import dev.me.mysmov.data.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.model.ui.CastUi
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieDetail
+import dev.me.mysmov.domain.model.ui.VideoTrailerUi
 
 
 data class DetailMovieViewState(

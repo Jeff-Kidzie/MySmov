@@ -1,11 +1,11 @@
-package dev.me.mysmov.domain
+package dev.me.mysmov.domain.usecase
 
 import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.ui.VideoTrailerUi
-import dev.me.mysmov.data.repository.MovieRepository
+import dev.me.mysmov.domain.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.repository.MovieRepository
 
 class GetVideoTrailersUseCase(private val movieRepository: MovieRepository) :
     BaseUseCase<GetVideoTrailersUseCaseParam, GetVideoTrailersUseCaseResult> {

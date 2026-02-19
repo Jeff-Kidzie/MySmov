@@ -2,11 +2,11 @@ package dev.me.mysmov.feature.home
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieCategory
-import dev.me.mysmov.domain.GetMovieByCategoryUseCase
-import dev.me.mysmov.domain.GetMovieByCategoryUseCaseParam
-import dev.me.mysmov.domain.GetMovieByCategoryUseCaseResult
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieCategory
+import dev.me.mysmov.domain.usecase.GetMovieByCategoryUseCase
+import dev.me.mysmov.domain.usecase.GetMovieByCategoryUseCaseParam
+import dev.me.mysmov.domain.usecase.GetMovieByCategoryUseCaseResult
 import dev.me.mysmov.domain.movies.NowPlayingMovieUseCase
 import dev.me.mysmov.domain.movies.NowPlayingMovieUseCaseParam
 import dev.me.mysmov.domain.movies.NowPlayingMovieUseCaseResult

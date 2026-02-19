@@ -1,13 +1,14 @@
 package dev.me.mysmov.data.datasource
 
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieDetail
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieDetail
+import dev.me.mysmov.data.local.dao.AppDatabase
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
-import dev.me.mysmov.data.repository.MovieRepository
+import dev.me.mysmov.domain.repository.MovieRepository
 
-class LocalMovieDataSource : MovieRepository {
+class LocalMovieDataSource(val database: AppDatabase) : MovieRepository {
     override suspend fun getDiscoverMovies(): CallResult<List<MediaItem>> {
         TODO("Not yet implemented")
     }

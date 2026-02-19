@@ -45,7 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.me.mysmov.data.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.model.ui.VideoTrailerUi
 import dev.me.mysmov.ui.component.AppButton
 import dev.me.mysmov.ui.component.ButtonType
 import dev.me.mysmov.ui.component.shimmer

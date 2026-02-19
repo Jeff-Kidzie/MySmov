@@ -1,10 +1,10 @@
-package dev.me.mysmov.data.repository
+package dev.me.mysmov.domain.repository
 
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieDetail
 
 interface MovieRepository {
     suspend fun getDiscoverMovies() : CallResult<List<MediaItem>>

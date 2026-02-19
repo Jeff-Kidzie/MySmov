@@ -1,10 +1,10 @@
-package dev.me.mysmov.service
+package dev.me.mysmov.data.remote
 
 import dev.me.mysmov.data.DataResponse
-import dev.me.mysmov.data.model.MediaItem
-import dev.me.mysmov.data.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
+import dev.me.mysmov.domain.model.MediaItem
+import dev.me.mysmov.domain.model.MovieDetail
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

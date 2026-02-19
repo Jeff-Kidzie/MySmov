@@ -1,6 +1,6 @@
 package dev.me.mysmov.di
 
-import dev.me.mysmov.service.ApiService
+import dev.me.mysmov.data.remote.ApiService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

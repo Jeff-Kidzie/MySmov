@@ -2,17 +2,17 @@ package dev.me.mysmov.feature.detail
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
-import dev.me.mysmov.data.model.ui.CastUi
-import dev.me.mysmov.data.model.ui.VideoTrailerUi
-import dev.me.mysmov.domain.GetCastUseCase
-import dev.me.mysmov.domain.GetCastUseCaseParam
-import dev.me.mysmov.domain.GetCastUseCaseResult
+import dev.me.mysmov.domain.model.ui.CastUi
+import dev.me.mysmov.domain.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.usecase.GetCastUseCase
+import dev.me.mysmov.domain.usecase.GetCastUseCaseParam
+import dev.me.mysmov.domain.usecase.GetCastUseCaseResult
 import dev.me.mysmov.domain.movies.GetMovieDetailUseCase
 import dev.me.mysmov.domain.movies.GetMovieDetailUseCaseParam
 import dev.me.mysmov.domain.movies.GetMovieDetailUseCaseResult
-import dev.me.mysmov.domain.GetVideoTrailersUseCase
-import dev.me.mysmov.domain.GetVideoTrailersUseCaseParam
-import dev.me.mysmov.domain.GetVideoTrailersUseCaseResult
+import dev.me.mysmov.domain.usecase.GetVideoTrailersUseCase
+import dev.me.mysmov.domain.usecase.GetVideoTrailersUseCaseParam
+import dev.me.mysmov.domain.usecase.GetVideoTrailersUseCaseResult
 import kotlinx.coroutines.launch
 
 class MovieDetailViewModel(
