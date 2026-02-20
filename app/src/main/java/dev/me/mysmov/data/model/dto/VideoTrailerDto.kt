@@ -1,6 +1,7 @@
 package dev.me.mysmov.data.model.dto
 
 import com.google.gson.annotations.SerializedName
+import dev.me.mysmov.domain.model.ui.VideoTrailer
 
 data class VideoTrailerDto(
     @SerializedName("iso_639_1")
@@ -16,4 +17,9 @@ data class VideoTrailerDto(
     @SerializedName("published_at")
     val publishedAt: String,
     val id: String
+)
+
+fun VideoTrailerDto.toVideoTrailer() = VideoTrailer(
+    imgUrl = "https://img.youtube.com/vi/${key}/hqdefault.jpg",
+    title = name
 )

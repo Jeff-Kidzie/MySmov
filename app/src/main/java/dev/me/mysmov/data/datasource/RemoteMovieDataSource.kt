@@ -8,10 +8,16 @@ import dev.me.mysmov.domain.model.MediaItem
 import dev.me.mysmov.domain.model.MovieDetail
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
+import dev.me.mysmov.data.model.dto.toCast
+import dev.me.mysmov.data.model.dto.toVideoTrailer
 import dev.me.mysmov.domain.repository.MovieRepository
 import dev.me.mysmov.data.remote.ApiService
+import dev.me.mysmov.domain.model.ui.Cast
+import dev.me.mysmov.domain.model.ui.VideoTrailer
+import kotlin.collections.filter
 
-class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepository {
+class RemoteMovieDataSource(private val apiService: ApiService) :
+    MovieRepository {
     override suspend fun getDiscoverMovies(): CallResult<List<MediaItem>> {
         val result = callApi { apiService.getDiscoverMovie() }
         return result
@@ -30,7 +36,7 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
                         AppConstant.BASE_URL_IMAGE + movie.posterPath
                     },
                     rating = movie.rating,
-                    backdropPath =  AppConstant.BASE_URL_IMAGE + movie.backdropPath,
+                    backdropPath = AppConstant.BASE_URL_IMAGE + movie.backdropPath,
                     releaseDate = movie.releaseDate
                 )
             }
@@ -46,19 +52,18 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
         }
     }
 
-    override suspend fun getCastByMovie(movieId: Int): CallResult<List<CastDto>> {
+    override suspend fun getCastByMovie(movieId: Int): CallResult<List<Cast>> {
         return callApi { apiService.getMovieCredits(movieId) }.transform { dataResponse ->
-            dataResponse.results.map { castDto ->
-                castDto.copy(
-                    profilePath = AppConstant.BASE_URL_IMAGE + castDto.profilePath
-                )
-            }
+            dataResponse.results.map { it.toCast() }
         }
     }
 
-    override suspend fun getVideosByMovie(movieId: Int): CallResult<List<VideoTrailerDto>> {
+    override suspend fun getVideosByMovie(movieId: Int): CallResult<List<VideoTrailer>> {
         return callApi { apiService.getMovieVideos(movieId) }.transform { dataResponse ->
-            dataResponse.results
+            dataResponse.results.filter { it.site == "YouTube" && (it.type == "Trailer") }
+                .map {
+                    it.toVideoTrailer()
+                }
         }
     }
 
@@ -66,7 +71,12 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
         category: String,
         page: Int
     ): CallResult<List<MediaItem>> {
-        return callApi { apiService.getMovieByCategory(category, page) }.transform { dataResponse ->
+        return callApi {
+            apiService.getMovieByCategory(
+                category,
+                page
+            )
+        }.transform { dataResponse ->
             dataResponse.results.map { movie ->
                 MediaItem(
                     id = movie.id,
@@ -78,7 +88,7 @@ class RemoteMovieDataSource(private val apiService: ApiService) : MovieRepositor
                         AppConstant.BASE_URL_IMAGE + movie.posterPath
                     },
                     rating = movie.rating,
-                    backdropPath =  AppConstant.BASE_URL_IMAGE + movie.backdropPath,
+                    backdropPath = AppConstant.BASE_URL_IMAGE + movie.backdropPath,
                     releaseDate = movie.releaseDate
                 )
             }

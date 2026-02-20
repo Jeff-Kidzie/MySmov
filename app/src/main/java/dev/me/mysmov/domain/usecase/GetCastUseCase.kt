@@ -4,7 +4,7 @@ import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.domain.model.ui.CastUi
+import dev.me.mysmov.domain.model.ui.Cast
 import dev.me.mysmov.domain.repository.MovieRepository
 import dev.me.mysmov.domain.usecase.GetCastUseCaseResult.*
 
@@ -14,7 +14,7 @@ class GetCastUseCase(private val movieRepository: MovieRepository) :
         return when (val result = movieRepository.getCastByMovie(param.movieId)) {
             is CallResult.Success -> {
                 val castList = result.data.map { castDto ->
-                    CastUi(
+                    Cast(
                         id = castDto.id,
                         name = castDto.name,
                         role = castDto.character,
@@ -39,6 +39,6 @@ data class GetCastUseCaseParam(
 ) : UseCaseParam
 
 sealed class GetCastUseCaseResult : UseCaseResult {
-    data class GetCastSuccess(val castList: List<CastUi>) : GetCastUseCaseResult()
+    data class GetCastSuccess(val castList: List<Cast>) : GetCastUseCaseResult()
     data class GetCastFailure(val errorMessage: String) : GetCastUseCaseResult()
 }

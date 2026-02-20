@@ -1,6 +1,6 @@
 package dev.me.mysmov.domain.model.ui
 
-data class CastUi(
+data class Cast(
     val id : Int,
     val name : String,
     val role : String,

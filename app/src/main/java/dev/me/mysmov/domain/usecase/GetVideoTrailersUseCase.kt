@@ -4,7 +4,7 @@ import dev.me.mysmov.core.base.BaseUseCase
 import dev.me.mysmov.core.base.UseCaseParam
 import dev.me.mysmov.core.base.UseCaseResult
 import dev.me.mysmov.core.network.CallResult
-import dev.me.mysmov.domain.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.model.ui.VideoTrailer
 import dev.me.mysmov.domain.repository.MovieRepository
 
 class GetVideoTrailersUseCase(private val movieRepository: MovieRepository) :
@@ -16,7 +16,7 @@ class GetVideoTrailersUseCase(private val movieRepository: MovieRepository) :
                 val trailerList = result.data
                     .filter { it.site == "YouTube" && (it.type == "Trailer") }
                     .map { videoDto ->
-                        VideoTrailerUi(
+                        VideoTrailer(
                             imgUrl = "https://img.youtube.com/vi/${videoDto.key}/hqdefault.jpg",
                             title = videoDto.name
                         )
@@ -40,6 +40,6 @@ data class GetVideoTrailersUseCaseParam(
 ) : UseCaseParam
 
 sealed class GetVideoTrailersUseCaseResult : UseCaseResult {
-    data class Success(val trailerList: List<VideoTrailerUi>) : GetVideoTrailersUseCaseResult()
+    data class Success(val trailerList: List<VideoTrailer>) : GetVideoTrailersUseCaseResult()
     data class Error(val errorMessage: String) : GetVideoTrailersUseCaseResult()
 }

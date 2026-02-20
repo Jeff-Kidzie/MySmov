@@ -4,10 +4,10 @@ import dev.me.mysmov.core.base.Action
 import dev.me.mysmov.core.base.Effect
 import dev.me.mysmov.core.base.Event
 import dev.me.mysmov.core.base.ViewState
-import dev.me.mysmov.domain.model.ui.CastUi
+import dev.me.mysmov.domain.model.ui.Cast
 import dev.me.mysmov.domain.model.MediaItem
 import dev.me.mysmov.domain.model.MovieDetail
-import dev.me.mysmov.domain.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.model.ui.VideoTrailer
 
 
 data class DetailMovieViewState(
@@ -21,8 +21,8 @@ data class DetailMovieViewState(
     val duration : String = "",
     val listGenres : List<String> = emptyList(),
     val countReviews : Int = 0,
-    val listCast : List<CastUi> = emptyList(),
-    val listTrailers : List<VideoTrailerUi> = emptyList(),
+    val listCast : List<Cast> = emptyList(),
+    val listTrailers : List<VideoTrailer> = emptyList(),
 ) : ViewState
 
 sealed class DetailMovieEffect : Effect {
@@ -40,7 +40,7 @@ sealed class DetailMovieEvent : Event{
     object ShowLoading : DetailMovieEvent()
     object DismissLoading : DetailMovieEvent()
     data class ShowError(val message : String) : DetailMovieEvent()
-    data class ShowCasts(val casts : List<CastUi>) : DetailMovieEvent()
+    data class ShowCasts(val casts : List<Cast>) : DetailMovieEvent()
     data class ShowRelatedMovies(val mediaItems : List<MediaItem>) : DetailMovieEvent()
-    data class ShowTrailers(val trailers : List<VideoTrailerUi>) : DetailMovieEvent()
+    data class ShowTrailers(val trailers : List<VideoTrailer>) : DetailMovieEvent()
 }

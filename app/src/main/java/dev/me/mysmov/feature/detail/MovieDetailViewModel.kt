@@ -2,8 +2,8 @@ package dev.me.mysmov.feature.detail
 
 import androidx.lifecycle.viewModelScope
 import dev.me.mysmov.core.base.BaseViewModel
-import dev.me.mysmov.domain.model.ui.CastUi
-import dev.me.mysmov.domain.model.ui.VideoTrailerUi
+import dev.me.mysmov.domain.model.ui.Cast
+import dev.me.mysmov.domain.model.ui.VideoTrailer
 import dev.me.mysmov.domain.usecase.GetCastUseCase
 import dev.me.mysmov.domain.usecase.GetCastUseCaseParam
 import dev.me.mysmov.domain.usecase.GetCastUseCaseResult
@@ -112,7 +112,7 @@ class MovieDetailViewModel(
     private fun trailersReducer(
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
-    ): List<VideoTrailerUi> {
+    ): List<VideoTrailer> {
         return when (event) {
             is DetailMovieEvent.ShowTrailers -> {
                 event.trailers
@@ -125,7 +125,7 @@ class MovieDetailViewModel(
     private fun castReducer(
         oldState: DetailMovieViewState,
         event: DetailMovieEvent
-    ): List<CastUi> {
+    ): List<Cast> {
         return when (event) {
             is DetailMovieEvent.ShowCasts -> {
                 event.casts
