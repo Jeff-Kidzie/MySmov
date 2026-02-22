@@ -3,7 +3,7 @@ package dev.me.mysmov.data.datasource
 import dev.me.mysmov.core.network.CallResult
 import dev.me.mysmov.domain.model.MediaItem
 import dev.me.mysmov.domain.model.MovieDetail
-import dev.me.mysmov.data.local.dao.AppDatabase
+import dev.me.mysmov.data.local.db.AppDatabase
 import dev.me.mysmov.data.model.dto.CastDto
 import dev.me.mysmov.data.model.dto.VideoTrailerDto
 import dev.me.mysmov.domain.model.ui.Cast

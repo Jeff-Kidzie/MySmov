@@ -73,6 +73,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.room.compiler)
     ksp(libs.room.compiler)
 
     // Material Icons Extended

@@ -3,7 +3,7 @@ package dev.me.mysmov.di
 import androidx.room.Room
 import dev.me.mysmov.data.datasource.LocalMovieDataSource
 import dev.me.mysmov.data.datasource.RemoteMovieDataSource
-import dev.me.mysmov.data.local.dao.AppDatabase
+import dev.me.mysmov.data.local.db.AppDatabase
 import dev.me.mysmov.domain.repository.MovieRepository
 import dev.me.mysmov.data.repository.MovieRepositoryImpl
 import org.koin.core.qualifier.named
