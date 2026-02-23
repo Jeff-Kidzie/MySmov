@@ -14,13 +14,6 @@ class GetVideoTrailersUseCase(private val movieRepository: MovieRepository) :
         return when (val result = movieRepository.getVideosByMovie(param.movieId)) {
             is CallResult.Success -> {
                 val trailerList = result.data
-                    .filter { it.site == "YouTube" && (it.type == "Trailer") }
-                    .map { videoDto ->
-                        VideoTrailer(
-                            imgUrl = "https://img.youtube.com/vi/${videoDto.key}/hqdefault.jpg",
-                            title = videoDto.name
-                        )
-                    }
                 GetVideoTrailersUseCaseResult.Success(trailerList)
             }
 

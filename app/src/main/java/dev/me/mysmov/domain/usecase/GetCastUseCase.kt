@@ -17,8 +17,8 @@ class GetCastUseCase(private val movieRepository: MovieRepository) :
                     Cast(
                         id = castDto.id,
                         name = castDto.name,
-                        role = castDto.character,
-                        imgUrl = castDto.profilePath ?: ""
+                        role = castDto.role,
+                        imgUrl = castDto.imgUrl
                     )
                 }
                 GetCastSuccess(castList)
