@@ -1,6 +1,7 @@
 package dev.me.mysmov.di
 
-import dev.me.mysmov.data.remote.ApiService
+import dev.me.mysmov.data.remote.MovieService
+import dev.me.mysmov.data.remote.TvService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -46,7 +47,6 @@ val networkModule = module {
             .build()
     }
 
-    single { get<Retrofit>().create(ApiService::class.java) }
-    // can add another api service here
-    // single { get<Retrofit>().create(AnotherApiService::class.java) }
+    single { get<Retrofit>().create(MovieService::class.java) }
+    single { get<Retrofit>().create(TvService::class.java) }
 }

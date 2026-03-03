@@ -14,7 +14,7 @@ val dataSourceModule = module {
     single { Room.databaseBuilder(get(), AppDatabase::class.java, "app_database").build() }
 
     // remote data source
-    single { RemoteMovieDataSource(get()) }
+    single { RemoteMovieDataSource(get(), get()) }
 
     // local data source
     single { LocalMovieDataSource(get()) }

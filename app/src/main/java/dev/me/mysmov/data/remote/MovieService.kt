@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ApiService {
+interface MovieService {
     @GET("discover/movie")
     suspend fun getDiscoverMovie(): Response<List<MediaItem>>
 
@@ -35,9 +35,5 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): Response<DataResponse<MediaItem>>
 
-    @GET("tv/{category}")
-    suspend fun getTvByCategory(
-        @Path("category") category: String,
-        @Query("page") page: Int = 1
-    ): Response<DataResponse<MediaItem>>
+
 }
